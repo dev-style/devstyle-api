@@ -1,8 +1,9 @@
 require("otenv").config();
 import mongoose, { Document, Model, Schema } from "mongoose";
 import { IAmbassador } from "../lib/interfaces";
+import DiffPlugin from "mongoose-history-diff";
 
-const userSchema: Schema<IAmbassador> = new mongoose.Schema(
+const ambassadorSchema: Schema<IAmbassador> = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -23,3 +24,11 @@ const userSchema: Schema<IAmbassador> = new mongoose.Schema(
   },
   { timestamps: true }
 );
+ambassadorSchema.plugin(DiffPlugin);
+
+const AmbassadorModel: Model<IAmbassador> = mongoose.model(
+  "Ambassador",
+  ambassadorSchema
+);
+
+export default AmbassadorModel;
