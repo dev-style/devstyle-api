@@ -103,3 +103,16 @@ export interface IUser extends Document {
   SignAccessToken: () => string;
   SignRefreshToken: () => string;
 }
+
+
+export interface IAmbassador extends Document {
+  name: string;
+  image: {};
+  social: Array<{
+    id: number;
+    name: string;
+    link: string;
+  }>;
+  colors: string;
+  show: boolean;
+}
