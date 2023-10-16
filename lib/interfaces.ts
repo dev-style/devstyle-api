@@ -104,10 +104,9 @@ export interface IUser extends Document {
   SignRefreshToken: () => string;
 }
 
-
 export interface IAmbassador extends Document {
+  user: mongoose.Schema.Types.ObjectId;
   name: string;
-  image: {};
   social: Array<{
     id: number;
     name: string;

@@ -5,11 +5,15 @@ import DiffPlugin from "mongoose-history-diff";
 
 const ambassadorSchema: Schema<IAmbassador> = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
     name: {
       type: String,
       required: true
     },
-    image: {},
     social: [
       {
         id: Schema.Types.Number,
