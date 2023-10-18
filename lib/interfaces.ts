@@ -105,7 +105,7 @@ export interface IUser extends Document {
 }
 
 export interface IAmbassador extends Document {
-  user: mongoose.Schema.Types.ObjectId;
+  userId: mongoose.Schema.Types.ObjectId;
   name: string;
   social: Array<{
     id: number;

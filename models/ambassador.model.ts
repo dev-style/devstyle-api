@@ -1,11 +1,11 @@
-require("otenv").config();
+require("dotenv").config();
 import mongoose, { Document, Model, Schema } from "mongoose";
 import { IAmbassador } from "../lib/interfaces";
 import DiffPlugin from "mongoose-history-diff";
 
 const ambassadorSchema: Schema<IAmbassador> = new mongoose.Schema(
   {
-    user: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true

@@ -1,8 +1,14 @@
 import { Response } from "express";
 import { redis } from "../utils/redis";
 import userModel from "../models/user.model";
+import { MongoClient } from "mongodb";
+import AmbassadorModel from "../models/ambassador.model";
 
 // get user by id
+
+const dbUrl: string = process.env.DB_URL || "";
+
+const client = new MongoClient(dbUrl);
 export const getUserById = async (id: string, res: Response) => {
   const userJson = await redis.get(id);
 
@@ -10,7 +16,7 @@ export const getUserById = async (id: string, res: Response) => {
     const user = JSON.parse(userJson);
     res.status(201).json({
       success: true,
-      user,
+      user
     });
   }
 };
@@ -21,16 +27,51 @@ export const getAllUsersService = async (res: Response) => {
 
   res.status(201).json({
     success: true,
-    users,
+    users
   });
 };
 
 // update user role
-export const updateUserRoleService = async (res:Response,id: string,role:string) => {
-  const user = await userModel.findByIdAndUpdate(id, { role }, { new: true });
+export const updateUserRoleService = async (
+  res: Response,
+  id: string,
+  role: string,
+  social: Array<{
+    id: number;
+    name: string;
+    link: string;
+  }>,
+  colors: string
+) => {
+  const user = await userModel.findOne({ _id: id });
+
+  const session = client.startSession();
+  if (role == "ambassador") {
+    try {
+      await session.withTransaction(async () => {
+        const ambassador = await AmbassadorModel.create({
+          userId: id,
+          name: user?.name,
+          social: social,
+          colors: colors
+        });
+
+        const users = await userModel.findByIdAndUpdate(
+          id,
+          { role },
+          { new: true }
+        );
+      });
+    } finally {
+      await session.endSession();
+      await client.close();
+    }
+  } else {
+    const user = await userModel.findByIdAndUpdate(id, { role }, { new: true });
+  }
 
   res.status(201).json({
     success: true,
-    user,
+    user
   });
-}
+};
