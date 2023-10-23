@@ -3,8 +3,8 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 
 export interface IAffiliation extends Document {
   ambassadorId: mongoose.Schema.Types.ObjectId;
+  ambassadorName: string;
   affiliateCode: string;
-  affiliateLink: string;
   clicksCount: number;
   createdAt: Date;
 }

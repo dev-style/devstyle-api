@@ -3,6 +3,7 @@ import { redis } from "../utils/redis";
 import userModel from "../models/user.model";
 import { MongoClient } from "mongodb";
 import AmbassadorModel from "../models/ambassador.model";
+import AffiliationModel from "../models/affiliation.model";
 
 // get user by id
 
@@ -56,6 +57,17 @@ export const updateUserRoleService = async (
           colors: colors
         });
 
+        const affiliateCode = Math.random().toString(36).substring(2);
+
+        console.log("Voici le code d'affiliation : ", affiliateCode);
+
+        const affiliation = await AffiliationModel.create({
+          ambassadorId: id,
+          ambassadorName: user?.name,
+          affiliateCode: affiliateCode,
+          clicksCount: 0
+        });
+
         const users = await userModel.findByIdAndUpdate(
           id,
           { role },
@@ -72,6 +84,9 @@ export const updateUserRoleService = async (
 
   res.status(201).json({
     success: true,
-    user
+    message: {
+      "user update": user
+      // "affiliation create":affiliat
+    }
   });
 };
