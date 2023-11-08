@@ -43,7 +43,6 @@ export const uploadGoodie = CatchAsyncError(
 
         for (const imageUrl of images) {
           const myCloud = await uploader(imageUrl);
-          // console.log(imageUrl);
 
           uploadedImages.push({
             public_id: myCloud.public_id,
@@ -54,16 +53,7 @@ export const uploadGoodie = CatchAsyncError(
         data.images = uploadedImages;
       }
       console.log("les donne image : ", data.images);
-      // console.log("l'images est :" ,)
-
-      // if (images) {
-      //   const myCloud = await uploader(images);
-
-      //   data.images = {
-      //     public_id: myCloud.public_id,
-      //     url: myCloud.secure_url
-      //   };
-      // }
+ 
 
       const results = await GoodieModel.create(data);
 
