@@ -119,3 +119,24 @@ export const deleteOneCollection = CatchAsyncError(
     }
   }
 );
+
+// update Views
+
+export const updateViews = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const collection = await CollectionModel.findOneAndUpdate(
+        { slug: req.params.slug },
+        { $inc: { views: 1 } },
+        { new: true }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: collection
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);

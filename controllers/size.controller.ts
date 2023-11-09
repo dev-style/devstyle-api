@@ -27,13 +27,15 @@ export const getAllSizes = CatchAsyncError(
 
       res.status(200).json({
         success: true,
-        Size
+        message: Size
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
   }
 );
+
+
 
 export const getOneSize = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
