@@ -53,7 +53,6 @@ export const uploadGoodie = CatchAsyncError(
         data.images = uploadedImages;
       }
       console.log("les donne image : ", data.images);
- 
 
       const results = await GoodieModel.create(data);
 
@@ -110,6 +109,11 @@ export const editGoodie = CatchAsyncError(
 export const getSingleGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const goodie = GoodieModel.findOne({ _id: req.params.id });
+      res.status(200).json({
+        success: true,
+        message: goodie
+      });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }

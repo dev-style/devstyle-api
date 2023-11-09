@@ -35,6 +35,8 @@ export const getAllSizes = CatchAsyncError(
   }
 );
 
+
+
 export const getOneSize = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
