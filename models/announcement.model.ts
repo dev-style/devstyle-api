@@ -1,5 +1,5 @@
 require("dotenv").config();
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import DiffPlugin from "mongoose-history-diff";
 import { IAnnouncement } from "../lib/interfaces";
 
@@ -19,6 +19,9 @@ const announcementSchema: Schema<IAnnouncement> = new mongoose.Schema(
 
 announcementSchema.plugin(DiffPlugin);
 
-const AnnouncementModel: Model<IAnnouncement> = mongoose.model("Announcement", announcementSchema);
+const AnnouncementModel: Model<IAnnouncement> = mongoose.model(
+  "Announcement",
+  announcementSchema
+);
 
 export default AnnouncementModel;

@@ -1,5 +1,5 @@
 require("dotenv").config();
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import DiffPlugin from "mongoose-history-diff";
 import { IGoodie } from "../lib/interfaces";
 
@@ -45,7 +45,7 @@ const goodieSchema: Schema<IGoodie> = new mongoose.Schema(
         required: true,
       },
     ],
-    image: [
+    images: [
       {
         public_id: {
           type: String,

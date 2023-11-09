@@ -1,21 +1,26 @@
 import { CatchAsyncError } from "../middleware/catchAsyncErrors";
 import { NextFunction, Request, Response } from "express";
 import ErrorHandler from "../utils/ErrorHandler";
-import cloudinary from "cloudinary";
+import cloudinaryUpload from "../cloudinary_config";
 import CollectionModel from "../models/collection.model";
 import GoodieModel from "../models/goodie.model";
+import { ICollection } from "../lib/interfaces";
 
 export const createCollection = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = req.body;
+      const data: ICollection = req.body;
 
       const image = data.image;
 
       if (image) {
-        const myCloud = await cloudinary.v2.uploader.upload(image, {
+        const myCloud = (await cloudinaryUpload(image, {
           folder: "DevStyle/Collections",
-        });
+        })) as {
+          public_id: string;
+          url: string;
+          secure_url: string;
+        };
 
         data.image = {
           public_id: myCloud.public_id,

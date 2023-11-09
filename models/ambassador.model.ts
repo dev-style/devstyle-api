@@ -1,5 +1,5 @@
 require("dotenv").config();
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import { IAmbassador } from "../lib/interfaces";
 import DiffPlugin from "mongoose-history-diff";
 
@@ -8,23 +8,23 @@ const ambassadorSchema: Schema<IAmbassador> = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
     name: {
       type: String,
-      required: true
+      required: true,
     },
     social: [
       {
         id: Schema.Types.Number,
         name: String,
-        link: String
-      }
+        link: String,
+      },
     ],
     colors: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   { timestamps: true }
 );
