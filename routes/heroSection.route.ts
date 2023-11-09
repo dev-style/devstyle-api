@@ -1,6 +1,13 @@
 import express from "express";
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
-import { createHeroSection, deleteOneHeroSection, getAllHeroSections, getOneHeroSection, updateHeroSectionImage, updateOneHeroSection } from "../controllers/heroSection.controller";
+import {
+  createHeroSection,
+  deleteOneHeroSection,
+  getAllHeroSections,
+  getOneHeroSection,
+  updateHeroSectionImage,
+  updateOneHeroSection,
+} from "../controllers/heroSection.controller";
 const heroSectionRoute = express.Router();
 
 heroSectionRoute.post(
@@ -9,18 +16,8 @@ heroSectionRoute.post(
   authorizeRoles("admin"),
   createHeroSection
 );
-heroSectionRoute.get(
-  "/hero/:id",
-  isAutheticated,
-  authorizeRoles("admin"),
-  getOneHeroSection
-);
-heroSectionRoute.get(
-  "/hero/all",
-  isAutheticated,
-  authorizeRoles("admin"),
-  getAllHeroSections
-);
+heroSectionRoute.get("/hero/all", getAllHeroSections);
+heroSectionRoute.get("/hero/:id", getOneHeroSection);
 heroSectionRoute.delete(
   "/hero/delete/:id",
   isAutheticated,

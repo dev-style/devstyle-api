@@ -6,6 +6,7 @@ import GoodieModel from "../models/goodie.model";
 import { getAllGoodiesService } from "../services/goodie.service";
 import CollectionModel from "../models/collection.model";
 import { IGoodie } from "../lib/interfaces";
+import mongoose from "mongoose";
 
 // upload goodie
 export const uploadGoodie = CatchAsyncError(
@@ -52,7 +53,7 @@ export const uploadGoodie = CatchAsyncError(
 
       const results = await GoodieModel.create(data);
 
-      res.status(201).json({
+      res.status(200).json({
         message: results,
       });
     } catch (error: any) {
@@ -104,6 +105,13 @@ export const editGoodie = CatchAsyncError(
 export const getSingleGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const goodie = await GoodieModel.findOne({ slug: req.params.slug })
+        .populate("fromCollection")
+        .populate("size");
+
+      res.status(200).json({
+        message: goodie,
+      });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -114,7 +122,7 @@ export const getSingleGoodie = CatchAsyncError(
 export const getAllGoodies = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const goodies = await GoodieModel.find();
+      const goodies = await GoodieModel.find({ show: true });
 
       res.status(200).json({
         message: goodies,
@@ -140,6 +148,116 @@ export const getAdminAllGoodies = CatchAsyncError(
 export const deleteGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// update Likes
+
+export const updateLikes = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const goodie = await GoodieModel.findOneAndUpdate(
+        { slug: req.params.slug },
+        { $inc: { likes: 1 } },
+        { new: true }
+      );
+
+      res.status(200).json({
+        message: goodie,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// update Views
+
+export const updateViews = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const goodie = await GoodieModel.findOneAndUpdate(
+        { slug: req.params.slug },
+        { $inc: { views: 1 } },
+        { new: true }
+      );
+
+      res.status(200).json({
+        message: goodie,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// get new goodies
+
+export const getNewGoodies = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const skipCount = parseInt(req.headers.skip as string, 10);
+      const goodies = await GoodieModel.find({ show: true })
+        .skip(skipCount)
+        .limit(4)
+        .sort({ createdAt: -1 });
+
+      res.status(200).json({
+        message: goodies,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// get hot goodies
+
+export const getHotGoodies = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const skipCount = parseInt(req.headers.skip as string, 10);
+
+      const goodies = await GoodieModel.find({ show: true })
+        .skip(skipCount)
+        .sort({ views: -1, likes: -1 })
+        .limit(8);
+
+      res.status(200).json({
+        message: goodies,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// get hot goodies of a collection
+
+export const getHotGoodiesOfCollection = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const skipCount = parseInt(req.headers.skip as string, 10);
+
+      const goodies = await GoodieModel.aggregate([
+        {
+          $match: {
+            fromCollection: new mongoose.Types.ObjectId(
+              req.params.collectionID
+            ),
+            show: true,
+            _id: { $ne: new mongoose.Types.ObjectId(req.params.goodieID) },
+          },
+        },
+        { $sample: { size: 4 } },
+      ]);
+
+      res.status(200).json({
+        message: goodies,
+      });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }

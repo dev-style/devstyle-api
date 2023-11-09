@@ -30,7 +30,7 @@ export const createCollection = CatchAsyncError(
 
       const results = await CollectionModel.create(data);
 
-      res.status(201).json({
+      res.status(200).json({
         message: results,
       });
     } catch (error: any) {
@@ -40,9 +40,9 @@ export const createCollection = CatchAsyncError(
 );
 export const getAllCollections = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    const results = await CollectionModel.find();
+    const results = await CollectionModel.find({ show: true });
 
-    res.status(201).json({
+    res.status(200).json({
       message: results,
     });
 
@@ -55,9 +55,12 @@ export const getAllCollections = CatchAsyncError(
 export const getOneCollection = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const results = await CollectionModel.findOne({ _id: req.params.id });
+      const results = await CollectionModel.findOne({
+        slug: req.params.slug,
+        show: true,
+      });
 
-      res.status(201).json({
+      res.status(200).json({
         message: results,
       });
     } catch (error: any) {
@@ -68,18 +71,20 @@ export const getOneCollection = CatchAsyncError(
 export const getOneCollectionAndGoodies = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const collections = await CollectionModel.findOne({
+      const collection = await CollectionModel.findOne({
         slug: req.params.slug,
+        show: true,
       });
 
-      const goodie = await GoodieModel.find({
-        fromCollection: collections?._id,
+      const goodies = await GoodieModel.find({
+        fromCollection: collection?._id,
+        show: true,
       });
 
-      res.status(201).json({
+      res.status(200).json({
         message: {
-          collections,
-          goodie,
+          collection,
+          goodies,
         },
       });
     } catch (error: any) {
@@ -96,7 +101,7 @@ export const updateOneCollection = CatchAsyncError(
         { new: true }
       );
 
-      res.status(201).json({
+      res.status(200).json({
         message: results,
       });
     } catch (error: any) {
@@ -108,11 +113,31 @@ export const deleteOneCollection = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const results = await CollectionModel.deleteOne({ slug: req.params.slug });
 
-    res.status(201).json({
+    res.status(200).json({
       message: results,
     });
 
     try {
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// update Views
+
+export const updateViews = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const collection = await CollectionModel.findOneAndUpdate(
+        { slug: req.params.slug },
+        { $inc: { views: 1 } },
+        { new: true }
+      );
+
+      res.status(200).json({
+        message: collection,
+      });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }

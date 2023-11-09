@@ -4,7 +4,12 @@ import {
   editGoodie,
   getAdminAllGoodies,
   getAllGoodies,
+  getHotGoodies,
+  getHotGoodiesOfCollection,
+  getNewGoodies,
   getSingleGoodie,
+  updateLikes,
+  updateViews,
   uploadGoodie,
 } from "../controllers/goodie.controller";
 
@@ -25,9 +30,18 @@ goodieRoute.put(
   editGoodie
 );
 
-goodieRoute.get("/get-goodie/:id", getSingleGoodie);
+goodieRoute.put("/goodie/update/views/:slug", updateViews);
 
-goodieRoute.get("/get-goodie", getAllGoodies);
+goodieRoute.put("/goodie/update/likes/:slug", updateLikes);
+
+goodieRoute.get("/goodie/:slug", getSingleGoodie);
+goodieRoute.get("/goodie/all", getAllGoodies);
+goodieRoute.get("/goodies/new-goodies", getNewGoodies);
+goodieRoute.get("/goodies/hot-goodies", getHotGoodies);
+goodieRoute.get(
+  "/goodies/hot-goodies/collection/:collectionID/:goodieID",
+  getHotGoodiesOfCollection
+);
 
 goodieRoute.get(
   "/get-admin-goodie",

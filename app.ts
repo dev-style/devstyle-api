@@ -16,7 +16,7 @@ import sizeRoute from "./routes/size.route";
 import socialRoute from "./routes/social.route";
 import affiliationRoute from "./routes/affiliation.route";
 import newsletterRoute from "./routes/newsletter.route";
-import annoucementRoute from "./routes/announcement.route";
+import announcementRoute from "./routes/announcement.route";
 
 // body parser
 app.use(express.json({ limit: "50mb" }));
@@ -51,7 +51,7 @@ const limiter = rateLimit({
 app.use(
   "/api/v1",
   userRouter,
-  annoucementRoute,
+  announcementRoute,
   orderRouter,
   goodieRoute,
   collectionRoute,

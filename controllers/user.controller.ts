@@ -63,7 +63,7 @@ export const registrationUser = CatchAsyncError(
           data,
         });
 
-        res.status(201).json({
+        res.status(200).json({
           message: `Please check your email: ${user.email} to activate your account!`,
           activationToken: activationToken.token,
         });
@@ -132,7 +132,7 @@ export const activateUser = CatchAsyncError(
         password,
       });
 
-      res.status(201).json({});
+      res.status(200).json({});
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
@@ -301,7 +301,7 @@ export const updateUserInfo = CatchAsyncError(
 
       await redis.set(userId, JSON.stringify(user));
 
-      res.status(201).json({
+      res.status(200).json({
         user,
       });
     } catch (error: any) {
@@ -343,7 +343,7 @@ export const updatePassword = CatchAsyncError(
 
       await redis.set(req.user?._id, JSON.stringify(user));
 
-      res.status(201).json({
+      res.status(200).json({
         user,
       });
     } catch (error: any) {

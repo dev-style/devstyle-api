@@ -22,7 +22,21 @@ export const createAnnouncement = CatchAsyncError(
 export const getAllAnnouncement = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const announcement = await AnnouncementModel.find();
+      const announcements = await AnnouncementModel.find();
+
+      res.status(200).json({
+        message: announcements,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+export const getAnnouncement = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const announcement = await AnnouncementModel.findOne();
 
       res.status(200).json({
         message: announcement,

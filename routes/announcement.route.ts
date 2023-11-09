@@ -4,30 +4,32 @@ import {
   createAnnouncement,
   deleteAnnouncement,
   getAllAnnouncement,
-  updateAnnouncement
+  updateAnnouncement,
+  getAnnouncement,
 } from "../controllers/announcement.controller";
-const annoucementRoute = express.Router();
+const announcementRoute = express.Router();
 
-annoucementRoute.post(
-  "/annoucement/create",
+announcementRoute.post(
+  "/announcement/create",
   isAutheticated,
   authorizeRoles("admin"),
   createAnnouncement
 );
 
-annoucementRoute.get("/annoucement/all", getAllAnnouncement);
+announcementRoute.get("/announcement", getAnnouncement);
+announcementRoute.get("/announcement/all", getAllAnnouncement);
 
-annoucementRoute.get(
-  "/annoucement/update/:id",
+announcementRoute.get(
+  "/announcement/update/:id",
   isAutheticated,
   authorizeRoles("admin"),
   updateAnnouncement
 );
-annoucementRoute.get(
-  "/annoucement/delete/:id",
+announcementRoute.get(
+  "/announcement/delete/:id",
   isAutheticated,
   authorizeRoles("admin"),
   deleteAnnouncement
 );
 
-export default annoucementRoute;
+export default announcementRoute;

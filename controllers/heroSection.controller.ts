@@ -35,7 +35,7 @@ export const createHeroSection = CatchAsyncError(
 export const getAllHeroSections = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const results = await HeroSectionModel.find();
+      const results = await HeroSectionModel.find({ show: true });
 
       res.status(201).json({
         message: results,

@@ -106,7 +106,7 @@ export const saveEmail = CatchAsyncError(
 export const getAllEmails = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const results = await NewsletterModel.find();
-    res.status(201).json({
+    res.status(200).json({
       message: results,
     });
     try {
@@ -119,7 +119,7 @@ export const getAllEmails = CatchAsyncError(
 export const getOneEmail = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const results = await NewsletterModel.findOne({ _id: req.params.id });
-    res.status(201).json({
+    res.status(200).json({
       message: results,
     });
     try {
@@ -132,7 +132,7 @@ export const getOneEmail = CatchAsyncError(
 export const deleteOneEmail = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const results = await NewsletterModel.deleteOne({ _id: req.params.id });
-    res.status(201).json({
+    res.status(200).json({
       message: results,
     });
     try {

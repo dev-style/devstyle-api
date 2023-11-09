@@ -15,7 +15,7 @@ export const getUserById = async (id: string, res: Response) => {
 
   if (userJson) {
     const user = JSON.parse(userJson);
-    res.status(201).json({
+    res.status(200).json({
       user,
     });
   }
@@ -25,7 +25,7 @@ export const getUserById = async (id: string, res: Response) => {
 export const getAllUsersService = async (res: Response) => {
   const users = await userModel.find().sort({ createdAt: -1 });
 
-  res.status(201).json({
+  res.status(200).json({
     users,
   });
 };
@@ -80,7 +80,7 @@ export const updateUserRoleService = async (
     const user = await userModel.findByIdAndUpdate(id, { role }, { new: true });
   }
 
-  res.status(201).json({
+  res.status(200).json({
     message: {
       "user update": user,
       // "affiliation create":affiliat
