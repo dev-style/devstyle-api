@@ -39,7 +39,7 @@ export interface IGoodie extends Document {
   inPromo: boolean;
   views: number;
   size: Array<ISize>;
-  image: Array<{
+  images: Array<{
     public_id: string;
     url: string;
   }>;
