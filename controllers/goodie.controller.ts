@@ -156,3 +156,88 @@ export const deleteGoodie = CatchAsyncError(
     }
   }
 );
+
+// update Likes
+
+export const updateLikes = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const goodie = await GoodieModel.findOneAndUpdate(
+        { slug: req.params.slug },
+        { $inc: { likes: 1 } },
+        { new: true }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: goodie
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// update Views
+
+export const updateViews = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const goodie = await GoodieModel.findOneAndUpdate(
+        { slug: req.params.slug },
+        { $inc: { views: 1 } },
+        { new: true }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: goodie
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// get new goodies
+
+export const getNewGoodies = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const skipCount = parseInt(req.headers.skip as string, 10);
+      const goodies = await GoodieModel.find()
+        .skip(skipCount)
+        .limit(4)
+        .sort({ createdAt: -1 });
+
+      res.status(200).json({
+        success: true,
+        messge: goodies
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// get hot goodies
+
+export const getHotGoodies = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const skipCount = parseInt(req.headers.skip as string, 10);
+
+      const goodies = await GoodieModel.find()
+        .skip(skipCount)
+        .sort({ views: -1, likes: -1 })
+        .limit(8);
+
+      res.status(201).json({
+        success: true,
+        message: goodies
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
