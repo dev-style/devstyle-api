@@ -23,8 +23,7 @@ export const createOrder = CatchAsyncError(
       const newOrder = await OrderModel.create(data);
 
       res.status(200).json({
-        success: true,
-        newOrder
+        newOrder,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -39,8 +38,7 @@ export const getAllOrders = CatchAsyncError(
       const orders = await OrderModel.find().sort({ createdAt: -1 });
 
       res.status(201).json({
-        success: true,
-        orders
+        orders,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));

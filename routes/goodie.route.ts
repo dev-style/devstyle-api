@@ -5,8 +5,9 @@ import {
   getAdminAllGoodies,
   getAllGoodies,
   getSingleGoodie,
-  uploadGoodie
+  uploadGoodie,
 } from "../controllers/goodie.controller";
+
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
 const goodieRoute = express.Router();
 
@@ -34,8 +35,6 @@ goodieRoute.get(
   authorizeRoles("admin"),
   getAdminAllGoodies
 );
-
-
 
 goodieRoute.delete(
   "/delete-goodie/:id",

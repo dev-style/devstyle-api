@@ -26,8 +26,8 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
-    credentials: true
+    origin: process.env.ORIGIN,
+    credentials: true,
   })
 );
 
@@ -36,7 +36,7 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: "draft-7",
-  legacyHeaders: false
+  legacyHeaders: false,
 });
 
 // routes
@@ -58,10 +58,9 @@ app.use(
 );
 
 // testing api
-app.get("/test", (req: Request, res: Response, next: NextFunction) => {
+app.get("/", (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
-    succcess: true,
-    message: "API is working"
+    message: "Welcome to the otherside🙂",
   });
 });
 

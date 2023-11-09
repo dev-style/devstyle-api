@@ -1,17 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CatchAsyncError } from "../middleware/catchAsyncErrors";
 import ErrorHandler from "../utils/ErrorHandler";
-import cloudinary from "cloudinary";
-import { redis } from "../utils/redis";
-import mongoose from "mongoose";
-import path from "path";
-import ejs from "ejs";
-import sendMail from "../utils/sendMail";
-import NotificationModel from "../models/size.model";
-import axios from "axios";
-import GoodieModel from "../models/goodie.model";
-import { createGoodie, getAllGoodiesService } from "../services/goodie.service";
-import CollectionModel from "../models/collection.model";
 import NewsletterModel from "../models/newsletter.model";
 
 const mailchimp = require("@mailchimp/mailchimp_marketing");
@@ -20,7 +9,7 @@ const mailchimp = require("@mailchimp/mailchimp_marketing");
 
 mailchimp.setConfig({
   apiKey: process.env.MAILCHIMP_API_KEY,
-  server: process.env.MAILCHIMP_SERVER_PREFIX
+  server: process.env.MAILCHIMP_SERVER_PREFIX,
 });
 
 export const createAudience = CatchAsyncError(
@@ -29,7 +18,7 @@ export const createAudience = CatchAsyncError(
       console.log(true, req);
 
       const event = {
-        name: "_DevStyle Newletter"
+        name: "_DevStyle Newletter",
       };
 
       const footerContactInfo = {
@@ -38,14 +27,14 @@ export const createAudience = CatchAsyncError(
         city: "Douala",
         state: "Littoral",
         zip: "237",
-        country: "CM"
+        country: "CM",
       };
 
       const campaignDefaults = {
         from_name: "_DevStyle",
         from_email: "contact.devstyle@gmail.com",
         subject: "_DevStyle Newsletter",
-        language: "FR_FR"
+        language: "FR_FR",
       };
 
       async function run() {
@@ -54,7 +43,7 @@ export const createAudience = CatchAsyncError(
           contact: footerContactInfo,
           permission_reminder: "permission_reminder",
           email_type_option: true,
-          campaign_defaults: campaignDefaults
+          campaign_defaults: campaignDefaults,
         });
 
         console.log(
@@ -78,7 +67,7 @@ export const saveEmail = CatchAsyncError(
     let { email } = req.body;
 
     const NewNewsletter = new NewsletterModel({
-      email
+      email,
     });
 
     NewNewsletter.save()
@@ -88,7 +77,7 @@ export const saveEmail = CatchAsyncError(
             process.env.MAILCHIMP_AUDIENCE_ID,
             {
               email_address: email,
-              status: "subscribed"
+              status: "subscribed",
             }
           );
 
@@ -108,7 +97,7 @@ export const saveEmail = CatchAsyncError(
       .catch((error) => {
         console.log(error.message);
         return res.status(500).json({
-          message: "Newsletter not created"
+          message: "Newsletter not created",
         });
       });
   }
@@ -118,8 +107,7 @@ export const getAllEmails = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const results = await NewsletterModel.find();
     res.status(201).json({
-      success: true,
-      message: results
+      message: results,
     });
     try {
     } catch (error: any) {
@@ -132,8 +120,7 @@ export const getOneEmail = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const results = await NewsletterModel.findOne({ _id: req.params.id });
     res.status(201).json({
-      success: true,
-      message: results
+      message: results,
     });
     try {
     } catch (error: any) {
@@ -146,8 +133,7 @@ export const deleteOneEmail = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const results = await NewsletterModel.deleteOne({ _id: req.params.id });
     res.status(201).json({
-      success: true,
-      message: results
+      message: results,
     });
     try {
     } catch (error: any) {

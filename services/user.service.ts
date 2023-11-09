@@ -16,8 +16,7 @@ export const getUserById = async (id: string, res: Response) => {
   if (userJson) {
     const user = JSON.parse(userJson);
     res.status(201).json({
-      success: true,
-      user
+      user,
     });
   }
 };
@@ -27,8 +26,7 @@ export const getAllUsersService = async (res: Response) => {
   const users = await userModel.find().sort({ createdAt: -1 });
 
   res.status(201).json({
-    success: true,
-    users
+    users,
   });
 };
 
@@ -54,7 +52,7 @@ export const updateUserRoleService = async (
           userId: id,
           name: user?.name,
           social: social,
-          colors: colors
+          colors: colors,
         });
 
         const affiliateCode = Math.random().toString(36).substring(2);
@@ -65,7 +63,7 @@ export const updateUserRoleService = async (
           ambassadorId: id,
           ambassadorName: user?.name,
           affiliateCode: affiliateCode,
-          clicksCount: 0
+          clicksCount: 0,
         });
 
         const users = await userModel.findByIdAndUpdate(
@@ -83,10 +81,9 @@ export const updateUserRoleService = async (
   }
 
   res.status(201).json({
-    success: true,
     message: {
-      "user update": user
+      "user update": user,
       // "affiliation create":affiliat
-    }
+    },
   });
 };

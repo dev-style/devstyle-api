@@ -11,8 +11,7 @@ export const createSize = CatchAsyncError(
       const result = await SizeModel.create(data);
 
       res.status(200).json({
-        success: true,
-        message: result
+        message: result,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -26,8 +25,7 @@ export const getAllSizes = CatchAsyncError(
       const Size = await SizeModel.find();
 
       res.status(200).json({
-        success: true,
-        Size
+        Size,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -41,8 +39,7 @@ export const getOneSize = CatchAsyncError(
       const Size = SizeModel.findOne({ _id: req.params.id });
 
       res.status(200).json({
-        success: true,
-        Size
+        Size,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -60,8 +57,7 @@ export const updateOneSize = CatchAsyncError(
       );
 
       res.status(200).json({
-        success: true,
-        Size
+        Size,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -75,8 +71,7 @@ export const deleteOneSize = CatchAsyncError(
       const Size = SizeModel.deleteOne({ _id: req.params.id });
 
       res.status(200).json({
-        success: true,
-        Size
+        Size,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));

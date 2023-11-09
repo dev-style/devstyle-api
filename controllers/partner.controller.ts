@@ -24,13 +24,12 @@ export const createPartner = CatchAsyncError(
         link,
         logoColor: urls[0] ?? "",
         logoWhite: urls[1] ?? "",
-        logoBlack: urls[2] ?? ""
+        logoBlack: urls[2] ?? "",
       };
 
       const myPartner = await PartnerModel.create(partner);
       res.status(200).json({
-        success: true,
-        myPartner
+        myPartner,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -44,8 +43,7 @@ export const getAllPartners = CatchAsyncError(
       const partners = await PartnerModel.find();
 
       res.status(200).json({
-        success: true,
-        partners
+        partners,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -59,8 +57,7 @@ export const getOnePartner = CatchAsyncError(
       const partners = await PartnerModel.findById(req.params.id);
 
       res.status(200).json({
-        success: true,
-        partners
+        partners,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -78,8 +75,7 @@ export const updateOnePartner = CatchAsyncError(
       );
 
       res.status(200).json({
-        success: true,
-        partners
+        partners,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -93,15 +89,13 @@ export const deleteOnePartner = CatchAsyncError(
       const partners = await PartnerModel.deleteOne({ id });
 
       res.status(200).json({
-        success: true,
-        partners
+        partners,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
   }
 );
-
 
 export const updatePartnerImage = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -110,8 +104,7 @@ export const updatePartnerImage = CatchAsyncError(
       const partners = await PartnerModel.deleteOne({ id });
 
       res.status(200).json({
-        success: true,
-        partners
+        partners,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));

@@ -64,7 +64,6 @@ export const registrationUser = CatchAsyncError(
         });
 
         res.status(201).json({
-          success: true,
           message: `Please check your email: ${user.email} to activate your account!`,
           activationToken: activationToken.token,
         });
@@ -133,9 +132,7 @@ export const activateUser = CatchAsyncError(
         password,
       });
 
-      res.status(201).json({
-        success: true,
-      });
+      res.status(201).json({});
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
@@ -184,7 +181,6 @@ export const logoutUser = CatchAsyncError(
       const userId = req.user?._id || "";
       redis.del(userId);
       res.status(200).json({
-        success: true,
         message: "Logged out successfully",
       });
     } catch (error: any) {
@@ -208,13 +204,13 @@ export const updateAccessToken = CatchAsyncError(
         return next(new ErrorHandler(message, 400));
       }
       const session = await redis.get(decoded.id as string);
-         
+
       if (!session) {
         return next(
           new ErrorHandler("Please login for access this resources!", 400)
         );
       }
-      
+
       const user = JSON.parse(session);
 
       const accessToken = jwt.sign(
@@ -306,7 +302,6 @@ export const updateUserInfo = CatchAsyncError(
       await redis.set(userId, JSON.stringify(user));
 
       res.status(201).json({
-        success: true,
         user,
       });
     } catch (error: any) {
@@ -349,7 +344,6 @@ export const updatePassword = CatchAsyncError(
       await redis.set(req.user?._id, JSON.stringify(user));
 
       res.status(201).json({
-        success: true,
         user,
       });
     } catch (error: any) {
@@ -403,7 +397,6 @@ export const updateProfilePicture = CatchAsyncError(
       await redis.set(userId, JSON.stringify(user));
 
       res.status(200).json({
-        success: true,
         user,
       });
     } catch (error: any) {
@@ -427,22 +420,16 @@ export const getAllUsers = CatchAsyncError(
 export const updateUserRole = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      
-      const { email, role , social , colors } = req.body;
-
-      
+      const { email, role, social, colors } = req.body;
 
       const isUserExist = await userModel.findOne({ email });
       if (isUserExist) {
         const id = isUserExist._id;
-        updateUserRoleService(res,id, role , social , colors);
+        updateUserRoleService(res, id, role, social, colors);
       } else {
         res.status(400).json({
-          success: false,
           message: "User not found",
-
         });
-
       }
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -467,7 +454,6 @@ export const deleteUser = CatchAsyncError(
       await redis.del(id);
 
       res.status(200).json({
-        success: true,
         message: "User deleted successfully",
       });
     } catch (error: any) {

@@ -11,7 +11,7 @@ import {
   updatePassword,
   updateProfilePicture,
   updateUserInfo,
-  updateUserRole
+  updateUserRole,
 } from "../controllers/user.controller";
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
 const userRouter = express.Router();

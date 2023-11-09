@@ -1,11 +1,11 @@
 {
-  "name": "server",
+  "name": "devstyle_api",
   "version": "1.0.0",
   "description": "",
   "type": "commonjs",
   "main": "build/server.js",
   "engines": {
-    "node": "18.x"
+    "node": "16.x"
   },
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only server.ts",
@@ -13,7 +13,7 @@
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false",
     "build": "tsc"
   },
-  "author": "shahriar sajeeb",
+  "author": "DevStyle",
   "license": "ISC",
   "dependencies": {
     "@mailchimp/mailchimp_marketing": "^3.0.80",
@@ -22,7 +22,6 @@
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.2",
-    "@types/node": "^20.4.0",
     "@types/socket.io": "^3.0.2",
     "@types/validator": "^13.7.17",
     "axios": "^1.4.0",
@@ -47,6 +46,7 @@
   },
   "devDependencies": {
     "@types/ejs": "^3.1.2",
+    "@types/node": "^20.8.10",
     "@types/node-cron": "^3.0.8",
     "@types/nodemailer": "^6.4.9"
   }

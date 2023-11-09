@@ -12,8 +12,7 @@ export const createSocial = CatchAsyncError(
       const results = await SocialModel.create(data);
 
       res.status(200).json({
-        success: true,
-        message: results
+        message: results,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -26,8 +25,7 @@ export const getAllSocials = CatchAsyncError(
     try {
       const Social = await SocialModel.find();
       res.status(200).json({
-        success: true,
-        Social
+        Social,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -45,8 +43,7 @@ export const updateOneSocial = CatchAsyncError(
       );
 
       res.status(200).json({
-        success: true,
-        Social
+        Social,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -58,11 +55,10 @@ export const deleteOneSocial = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const Social = await SocialModel.deleteOne({
-        _id: req.params.id
+        _id: req.params.id,
       });
       res.status(200).json({
-        success: true,
-        Social
+        Social,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
