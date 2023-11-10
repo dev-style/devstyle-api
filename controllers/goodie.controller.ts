@@ -17,7 +17,6 @@ const cloudinary = require("../cloudinary_config");
 // upload goodie
 export const uploadGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    let urls = [];
     try {
       const data = req.body;
 
