@@ -11,17 +11,16 @@ import axios from "axios";
 import GoodieModel from "../models/goodie.model";
 import { createGoodie, getAllGoodiesService } from "../services/goodie.service";
 import CollectionModel from "../models/collection.model";
+import fs from "fs";
 const cloudinary = require("../cloudinary_config");
 
 // upload goodie
 export const uploadGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
+    let urls = [];
     try {
       const data = req.body;
 
-      // data.availableColors = JSON.parse(req.body.availableColors);
-      // data.backgroundColors = JSON.parse(req.body.backgroundColors);
-      // data.size = JSON.parse(req.body.size);
 
       const collection = await CollectionModel.findOne({
         _id: data.fromCollection
@@ -36,29 +35,24 @@ export const uploadGoodie = CatchAsyncError(
       data.slug = collectionSlug + "-" + data.slug;
 
       const images = data.images;
-
       if (images) {
-        console.log("les images existe :", images);
+        console.log("les image existe :", images);
         const uploadedImages = [];
-
-        for (const imageUrl of images) {
-          const myCloud = await uploader(imageUrl);
-
+        for (const image of images) {
+          const myCloud = await uploader(image);
           uploadedImages.push({
             public_id: myCloud.public_id,
             url: myCloud.secure_url
           });
         }
-
         data.images = uploadedImages;
       }
-      console.log("les donne image : ", data.images);
 
       const results = await GoodieModel.create(data);
 
       res.status(201).json({
         success: true,
-        message: results
+        message: data
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
