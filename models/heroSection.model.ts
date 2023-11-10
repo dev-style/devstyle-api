@@ -1,5 +1,5 @@
 require("dotenv").config();
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import DiffPlugin from "mongoose-history-diff";
 import { IHeroSection } from "../lib/interfaces";
 
@@ -7,21 +7,21 @@ const heroSectionSchema: Schema<IHeroSection> = new mongoose.Schema(
   {
     text: {
       type: String,
-      required: true
+      required: true,
     },
     image: {
       public_id: {
-        type: String
+        type: String,
       },
       url: {
-        type: String
-      }
+        type: String,
+      },
     },
 
     show: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   { timestamps: true }

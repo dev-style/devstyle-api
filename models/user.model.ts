@@ -1,13 +1,11 @@
 require("dotenv").config();
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { IUser } from "../lib/interfaces";
 import DiffPlugin from "mongoose-history-diff";
 
 const emailRegexPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
 
 const userSchema: Schema<IUser> = new mongoose.Schema(
   {
@@ -43,7 +41,6 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
   },
   { timestamps: true }
 );
@@ -77,7 +74,6 @@ userSchema.methods.comparePassword = async function (
 ): Promise<boolean> {
   return await bcrypt.compare(enteredPassword, this.password);
 };
-
 
 userSchema.plugin(DiffPlugin);
 

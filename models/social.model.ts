@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import { ISocial } from "../lib/interfaces";
 import DiffPlugin from "mongoose-history-diff";
 
@@ -9,12 +9,12 @@ const socialSchema = new Schema<ISocial>(
       required: true,
       unique: true,
       index: true,
-      min: 1
+      min: 1,
     },
     name: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
 
   { timestamps: true }

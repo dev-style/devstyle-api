@@ -1,25 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 import { CatchAsyncError } from "../middleware/catchAsyncErrors";
 import ErrorHandler from "../utils/ErrorHandler";
-import { redis } from "../utils/redis";
-import mongoose from "mongoose";
-import path from "path";
-import ejs from "ejs";
-import sendMail from "../utils/sendMail";
-import NotificationModel from "../models/size.model";
-import axios from "axios";
+import cloudinaryUpload from "../cloudinary_config";
 import GoodieModel from "../models/goodie.model";
-import { createGoodie, getAllGoodiesService } from "../services/goodie.service";
+import { getAllGoodiesService } from "../services/goodie.service";
 import CollectionModel from "../models/collection.model";
-import fs from "fs";
+import mongoose from "mongoose";
+import { IGoodie } from "../lib/interfaces";
 const cloudinary = require("../cloudinary_config");
 
 // upload goodie
 export const uploadGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = req.body;
-
+      const data: IGoodie = req.body;
 
       const collection = await CollectionModel.findOne({
         _id: data.fromCollection
@@ -38,7 +32,8 @@ export const uploadGoodie = CatchAsyncError(
         console.log("les image existe :", images);
         const uploadedImages = [];
         for (const image of images) {
-          const myCloud = await uploader(image);
+          const myCloud: any = await uploader(image);
+
           uploadedImages.push({
             public_id: myCloud.public_id,
             url: myCloud.secure_url
@@ -60,7 +55,7 @@ export const uploadGoodie = CatchAsyncError(
 );
 
 const uploader = async (path: any) =>
-  await cloudinary.uploads(path, `DevStyle/Goodies`, {
+  await cloudinaryUpload(path, `DevStyle/Goodies`, {
     transformation: [
       {
         overlay: "devstyle_watermark",
@@ -98,13 +93,15 @@ export const editGoodie = CatchAsyncError(
   }
 );
 
-// get single goodie --- without purchasing
+// get single goodie --- without
 export const getSingleGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const goodie = GoodieModel.findOne({ _id: req.params.id });
+      const goodie = await GoodieModel.findOne({ slug: req.params.slug })
+        .populate("fromCollection")
+        .populate("size");
+
       res.status(200).json({
-        success: true,
         message: goodie
       });
     } catch (error: any) {
@@ -113,15 +110,14 @@ export const getSingleGoodie = CatchAsyncError(
   }
 );
 
-// get all goodies --- without purchasing
+// get all goodies --- without
 export const getAllGoodies = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const goodies = await GoodieModel.find();
+      const goodies = await GoodieModel.find({ show: true });
 
       res.status(200).json({
-        success: true,
-        goodies
+        message: goodies
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -140,7 +136,7 @@ export const getAdminAllGoodies = CatchAsyncError(
   }
 );
 
-// Delete Course --- only for admin
+// Delete goodie --- only for admin
 export const deleteGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -162,7 +158,6 @@ export const updateLikes = CatchAsyncError(
       );
 
       res.status(200).json({
-        success: true,
         message: goodie
       });
     } catch (error: any) {
@@ -183,7 +178,6 @@ export const updateViews = CatchAsyncError(
       );
 
       res.status(200).json({
-        success: true,
         message: goodie
       });
     } catch (error: any) {
@@ -198,14 +192,13 @@ export const getNewGoodies = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const skipCount = parseInt(req.headers.skip as string, 10);
-      const goodies = await GoodieModel.find()
+      const goodies = await GoodieModel.find({ show: true })
         .skip(skipCount)
         .limit(4)
         .sort({ createdAt: -1 });
 
       res.status(200).json({
-        success: true,
-        messge: goodies
+        message: goodies
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -220,13 +213,41 @@ export const getHotGoodies = CatchAsyncError(
     try {
       const skipCount = parseInt(req.headers.skip as string, 10);
 
-      const goodies = await GoodieModel.find()
+      const goodies = await GoodieModel.find({ show: true })
         .skip(skipCount)
         .sort({ views: -1, likes: -1 })
         .limit(8);
 
-      res.status(201).json({
-        success: true,
+      res.status(200).json({
+        message: goodies
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// get hot goodies of a collection
+
+export const getHotGoodiesOfCollection = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const skipCount = parseInt(req.headers.skip as string, 10);
+
+      const goodies = await GoodieModel.aggregate([
+        {
+          $match: {
+            fromCollection: new mongoose.Types.ObjectId(
+              req.params.collectionID
+            ),
+            show: true,
+            _id: { $ne: new mongoose.Types.ObjectId(req.params.goodieID) }
+          }
+        },
+        { $sample: { size: 4 } }
+      ]);
+
+      res.status(200).json({
         message: goodies
       });
     } catch (error: any) {

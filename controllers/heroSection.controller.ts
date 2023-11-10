@@ -13,20 +13,19 @@ export const createHeroSection = CatchAsyncError(
       const image = data.image;
       if (image) {
         const myCloud = await cloudinary.v2.uploader.upload(image, {
-          folder: "DevStyle/HeroSection"
+          folder: "DevStyle/HeroSection",
         });
 
         data.image = {
           public_id: myCloud.public_id,
-          url: myCloud.secure_url
+          url: myCloud.secure_url,
         };
       }
 
       const results = await HeroSectionModel.create(data);
 
       res.status(201).json({
-        success: true,
-        message: results
+        message: results,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -36,11 +35,10 @@ export const createHeroSection = CatchAsyncError(
 export const getAllHeroSections = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const results = await HeroSectionModel.find();
+      const results = await HeroSectionModel.find({ show: true });
 
       res.status(201).json({
-        success: true,
-        message: results
+        message: results,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -53,8 +51,7 @@ export const getOneHeroSection = CatchAsyncError(
       const results = await HeroSectionModel.findOne({ _id: req.params.id });
 
       res.status(201).json({
-        success: true,
-        message: results
+        message: results,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -71,8 +68,7 @@ export const updateOneHeroSection = CatchAsyncError(
       );
 
       res.status(201).json({
-        success: true,
-        message: results
+        message: results,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -85,8 +81,7 @@ export const deleteOneHeroSection = CatchAsyncError(
       const results = await HeroSectionModel.deleteOne({ _id: req.params.id });
 
       res.status(201).json({
-        success: true,
-        message: results
+        message: results,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -108,28 +103,27 @@ export const updateHeroSectionImage = CatchAsyncError(
 
           const myCloud = await cloudinary.v2.uploader.upload(image, {
             folder: "avatars",
-            width: 150
+            width: 150,
           });
           myHero.image = {
             public_id: myCloud.public_id,
-            url: myCloud.secure_url
+            url: myCloud.secure_url,
           };
         } else {
           const myCloud = await cloudinary.v2.uploader.upload(image, {
             folder: "avatars",
-            width: 150
+            width: 150,
           });
           myHero.image = {
             public_id: myCloud.public_id,
-            url: myCloud.secure_url
+            url: myCloud.secure_url,
           };
         }
       }
 
       await myHero?.save();
       res.status(201).json({
-        success: true,
-        message: myHero
+        message: myHero,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));

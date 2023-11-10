@@ -1,5 +1,5 @@
 require("dotenv").config();
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import DiffPlugin from "mongoose-history-diff";
 import { IGoodie } from "../lib/interfaces";
 
@@ -7,59 +7,65 @@ const goodieSchema: Schema<IGoodie> = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     description: {
       type: String,
-      required: true
+      required: true,
     },
     slug: {
       type: String,
       required: true,
       lowercase: true,
-      unique: true
+      unique: true,
     },
     fromCollection: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Collection",
-      required: true
+      required: true,
     },
     promoPercentage: {
-      type: Number
+      type: Number,
     },
     price: {
       type: Number,
-      required: true
+      required: true,
     },
     inPromo: {
       type: Boolean,
-      required: true
+      required: true,
     },
     views: {
-      type: Number
+      type: Number,
     },
     size: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Size",
-        required: true
-      }
+        required: true,
+      },
     ],
     images: [
       {
-      
-      }
+
+        public_id: {
+          type: String,
+        },
+        url: {
+          type: String,
+        },
+      },
     ],
     availableColors: [String],
     backgroundColors: [String],
 
     likes: {
-      type: Number
+      type: Number,
     },
     show: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   { timestamps: true }

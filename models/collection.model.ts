@@ -1,5 +1,5 @@
 require("dotenv").config();
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import DiffPlugin from "mongoose-history-diff";
 import { ICollection } from "../lib/interfaces";
 
@@ -7,27 +7,27 @@ const collectionSchema: Schema<ICollection> = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     slug: {
       type: String,
       required: true,
       lowercase: true,
-      unique: true
+      unique: true,
     },
     colors: {
       type: String,
-      required: true
+      required: true,
     },
     image: {
       public_id: String,
-      ur: String
+      ur: String,
     },
     views: Number,
     show: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   { timestamps: true }

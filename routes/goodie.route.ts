@@ -5,12 +5,14 @@ import {
   getAdminAllGoodies,
   getAllGoodies,
   getHotGoodies,
+  getHotGoodiesOfCollection,
   getNewGoodies,
   getSingleGoodie,
   updateLikes,
   updateViews,
-  uploadGoodie
+  uploadGoodie,
 } from "../controllers/goodie.controller";
+
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
 const goodieRoute = express.Router();
 
@@ -28,23 +30,18 @@ goodieRoute.put(
   editGoodie
 );
 
-goodieRoute.put(
-  "/goodie/update/views/:slug",
+goodieRoute.put("/goodie/update/views/:slug", updateViews);
 
-  updateViews
-);
+goodieRoute.put("/goodie/update/likes/:slug", updateLikes);
 
-goodieRoute.put(
-  "/goodie/update/likes/:slug",
-
-  updateLikes
-);
-
-goodieRoute.get("/get-goodie/:id", getSingleGoodie);
+goodieRoute.get("/goodie/:slug", getSingleGoodie);
+goodieRoute.get("/goodie/all", getAllGoodies);
 goodieRoute.get("/goodies/new-goodies", getNewGoodies);
 goodieRoute.get("/goodies/hot-goodies", getHotGoodies);
-
-goodieRoute.get("/get-goodie", getAllGoodies);
+goodieRoute.get(
+  "/goodies/hot-goodies/collection/:collectionID/:goodieID",
+  getHotGoodiesOfCollection
+);
 
 goodieRoute.get(
   "/get-admin-goodie",
