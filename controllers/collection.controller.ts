@@ -19,11 +19,7 @@ export const createCollection = CatchAsyncError(
           {
             folder: "DevStyle/Collections"
           }
-        )) as {
-          public_id: string;
-          url: string;
-          secure_url: string;
-        };
+        )) as ICloudinaryUploadResponse;
 
         data.image = {
           public_id: myCloud.public_id,
