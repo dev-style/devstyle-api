@@ -9,6 +9,11 @@ import mongoose from "mongoose";
 import { IGoodie } from "../lib/interfaces";
 const cloudinary = require("../cloudinary_config");
 
+interface CloudinaryUploadResponse {
+  public_id: string;
+  secure_url: string;
+}
+
 // upload goodie
 export const uploadGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -32,7 +37,9 @@ export const uploadGoodie = CatchAsyncError(
         console.log("les image existe :", images);
         const uploadedImages = [];
         for (const image of images) {
-          const myCloud: any = await uploader(image);
+          const myCloud: CloudinaryUploadResponse = (await uploader(
+            image
+          )) as CloudinaryUploadResponse;
 
           uploadedImages.push({
             public_id: myCloud.public_id,

@@ -40,7 +40,7 @@ export const createCollection = CatchAsyncError(
 );
 export const getAllCollections = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    const results = await CollectionModel.find();
+    const results = await CollectionModel.find({ show: true });
 
     res.status(201).json({
       success: true,
