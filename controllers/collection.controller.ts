@@ -4,7 +4,7 @@ import ErrorHandler from "../utils/ErrorHandler";
 import cloudinaryUpload from "../cloudinary_config";
 import CollectionModel from "../models/collection.model";
 import GoodieModel from "../models/goodie.model";
-import { ICollection } from "../lib/interfaces";
+import { ICloudinaryUploadResponse, ICollection } from "../lib/interfaces";
 
 export const createCollection = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -14,9 +14,12 @@ export const createCollection = CatchAsyncError(
       const image = data.image;
 
       if (image) {
-        const myCloud = (await cloudinaryUpload(image, {
-          folder: "DevStyle/Collections"
-        })) as {
+        const myCloud: ICloudinaryUploadResponse = (await cloudinaryUpload(
+          image,
+          {
+            folder: "DevStyle/Collections"
+          }
+        )) as {
           public_id: string;
           url: string;
           secure_url: string;

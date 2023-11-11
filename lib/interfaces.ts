@@ -118,3 +118,9 @@ export interface IAmbassador {
   colors: string;
   show: boolean;
 }
+
+
+export interface ICloudinaryUploadResponse {
+  public_id: string;
+  secure_url: string;
+}

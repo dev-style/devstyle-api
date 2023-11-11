@@ -6,13 +6,8 @@ import GoodieModel from "../models/goodie.model";
 import { getAllGoodiesService } from "../services/goodie.service";
 import CollectionModel from "../models/collection.model";
 import mongoose from "mongoose";
-import { IGoodie } from "../lib/interfaces";
+import { ICloudinaryUploadResponse, IGoodie } from "../lib/interfaces";
 const cloudinary = require("../cloudinary_config");
-
-interface CloudinaryUploadResponse {
-  public_id: string;
-  secure_url: string;
-}
 
 // upload goodie
 export const uploadGoodie = CatchAsyncError(
@@ -37,9 +32,9 @@ export const uploadGoodie = CatchAsyncError(
         console.log("les image existe :", images);
         const uploadedImages = [];
         for (const image of images) {
-          const myCloud: CloudinaryUploadResponse = (await uploader(
+          const myCloud: ICloudinaryUploadResponse = (await uploader(
             image
-          )) as CloudinaryUploadResponse;
+          )) as ICloudinaryUploadResponse;
 
           uploadedImages.push({
             public_id: myCloud.public_id,
