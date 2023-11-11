@@ -7,7 +7,7 @@ import {
   getOneCollection,
   getOneCollectionAndGoodies,
   updateOneCollection,
-  updateViews,
+  updateViews
 } from "../controllers/collection.controller";
 const collectionRoute = express.Router();
 
