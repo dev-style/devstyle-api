@@ -5,8 +5,9 @@ import cloudinaryUpload from "../cloudinary_config";
 import GoodieModel from "../models/goodie.model";
 import { getAllGoodiesService } from "../services/goodie.service";
 import CollectionModel from "../models/collection.model";
-import { IGoodie } from "../lib/interfaces";
 import mongoose from "mongoose";
+import { ICloudinaryUploadResponse, IGoodie } from "../lib/interfaces";
+const cloudinary = require("../cloudinary_config");
 
 // upload goodie
 export const uploadGoodie = CatchAsyncError(
@@ -14,47 +15,40 @@ export const uploadGoodie = CatchAsyncError(
     try {
       const data: IGoodie = req.body;
 
-      // data.availableColors = JSON.parse(req.body.availableColors);
-      // data.backgroundColors = JSON.parse(req.body.backgroundColors);
-      // data.size = JSON.parse(req.body.size);
-
       const collection = await CollectionModel.findOne({
-        _id: data.fromCollection,
+        _id: data.fromCollection
       });
       const collectionSlug = collection?.slug;
       if (!collection) {
         res.status(500).json({
-          message: "collection dont exist",
+          message: "collection dont exist"
         });
       }
 
       data.slug = collectionSlug + "-" + data.slug;
 
       const images = data.images;
-
       if (images) {
+        console.log("les image existe :", images);
         const uploadedImages = [];
-
-        for (const imageUrl of images) {
-          const myCloud = (await uploader(imageUrl)) as {
-            public_id: string;
-            url: string;
-            secure_url: string;
-          };
+        for (const image of images) {
+          const myCloud: ICloudinaryUploadResponse = (await uploader(
+            image
+          )) as ICloudinaryUploadResponse;
 
           uploadedImages.push({
             public_id: myCloud.public_id,
-            url: myCloud.secure_url,
+            url: myCloud.secure_url
           });
         }
-
         data.images = uploadedImages;
       }
 
       const results = await GoodieModel.create(data);
 
-      res.status(200).json({
-        message: results,
+      res.status(201).json({
+        success: true,
+        message: data
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -71,14 +65,14 @@ const uploader = async (path: any) =>
         gravity: "north_west",
         x: 5,
         y: 5,
-        width: "0.5",
+        width: "0.5"
       },
       {
         overlay: "devstyle_watermark",
         opacity: 6.5,
         gravity: "center",
         width: "1.0",
-        angle: 45,
+        angle: 45
       },
       {
         overlay: "devstyle_watermark",
@@ -86,9 +80,9 @@ const uploader = async (path: any) =>
         gravity: "south_east",
         x: 5,
         y: 5,
-        width: "0.5",
-      },
-    ],
+        width: "0.5"
+      }
+    ]
   });
 
 // edit goodie
@@ -110,7 +104,7 @@ export const getSingleGoodie = CatchAsyncError(
         .populate("size");
 
       res.status(200).json({
-        message: goodie,
+        message: goodie
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -125,7 +119,7 @@ export const getAllGoodies = CatchAsyncError(
       const goodies = await GoodieModel.find({ show: true });
 
       res.status(200).json({
-        message: goodies,
+        message: goodies
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -166,7 +160,7 @@ export const updateLikes = CatchAsyncError(
       );
 
       res.status(200).json({
-        message: goodie,
+        message: goodie
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -186,7 +180,7 @@ export const updateViews = CatchAsyncError(
       );
 
       res.status(200).json({
-        message: goodie,
+        message: goodie
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -206,7 +200,7 @@ export const getNewGoodies = CatchAsyncError(
         .sort({ createdAt: -1 });
 
       res.status(200).json({
-        message: goodies,
+        message: goodies
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -227,7 +221,7 @@ export const getHotGoodies = CatchAsyncError(
         .limit(8);
 
       res.status(200).json({
-        message: goodies,
+        message: goodies
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -249,14 +243,14 @@ export const getHotGoodiesOfCollection = CatchAsyncError(
               req.params.collectionID
             ),
             show: true,
-            _id: { $ne: new mongoose.Types.ObjectId(req.params.goodieID) },
-          },
+            _id: { $ne: new mongoose.Types.ObjectId(req.params.goodieID) }
+          }
         },
-        { $sample: { size: 4 } },
+        { $sample: { size: 4 } }
       ]);
 
       res.status(200).json({
-        message: goodies,
+        message: goodies
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));

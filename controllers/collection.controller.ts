@@ -4,7 +4,7 @@ import ErrorHandler from "../utils/ErrorHandler";
 import cloudinaryUpload from "../cloudinary_config";
 import CollectionModel from "../models/collection.model";
 import GoodieModel from "../models/goodie.model";
-import { ICollection } from "../lib/interfaces";
+import { ICloudinaryUploadResponse, ICollection } from "../lib/interfaces";
 
 export const createCollection = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -14,24 +14,23 @@ export const createCollection = CatchAsyncError(
       const image = data.image;
 
       if (image) {
-        const myCloud = (await cloudinaryUpload(image, {
-          folder: "DevStyle/Collections",
-        })) as {
-          public_id: string;
-          url: string;
-          secure_url: string;
-        };
+        const myCloud: ICloudinaryUploadResponse = (await cloudinaryUpload(
+          image,
+          {
+            folder: "DevStyle/Collections"
+          }
+        )) as ICloudinaryUploadResponse;
 
         data.image = {
           public_id: myCloud.public_id,
-          url: myCloud.secure_url,
+          url: myCloud.secure_url
         };
       }
 
       const results = await CollectionModel.create(data);
 
       res.status(200).json({
-        message: results,
+        message: results
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -42,8 +41,9 @@ export const getAllCollections = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const results = await CollectionModel.find({ show: true });
 
-    res.status(200).json({
-      message: results,
+    res.status(201).json({
+      success: true,
+      message: results
     });
 
     try {
@@ -57,11 +57,11 @@ export const getOneCollection = CatchAsyncError(
     try {
       const results = await CollectionModel.findOne({
         slug: req.params.slug,
-        show: true,
+        show: true
       });
 
       res.status(200).json({
-        message: results,
+        message: results
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -73,19 +73,19 @@ export const getOneCollectionAndGoodies = CatchAsyncError(
     try {
       const collection = await CollectionModel.findOne({
         slug: req.params.slug,
-        show: true,
+        show: true
       });
 
       const goodies = await GoodieModel.find({
         fromCollection: collection?._id,
-        show: true,
+        show: true
       });
 
       res.status(200).json({
         message: {
           collection,
-          goodies,
-        },
+          goodies
+        }
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -102,7 +102,7 @@ export const updateOneCollection = CatchAsyncError(
       );
 
       res.status(200).json({
-        message: results,
+        message: results
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -114,7 +114,7 @@ export const deleteOneCollection = CatchAsyncError(
     const results = await CollectionModel.deleteOne({ slug: req.params.slug });
 
     res.status(200).json({
-      message: results,
+      message: results
     });
 
     try {
@@ -136,7 +136,7 @@ export const updateViews = CatchAsyncError(
       );
 
       res.status(200).json({
-        message: collection,
+        message: collection
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));

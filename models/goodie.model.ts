@@ -47,6 +47,7 @@ const goodieSchema: Schema<IGoodie> = new mongoose.Schema(
     ],
     images: [
       {
+
         public_id: {
           type: String,
         },
