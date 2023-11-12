@@ -89,6 +89,42 @@ const uploader = async (path: any) =>
 export const editGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const data = req.body;
+      const images = data.images;
+      const goodieId = req.params.id;
+
+      console.log("le id", goodieId);
+
+      const goodieData = await GoodieModel.findById({ _id: goodieId });
+
+      console.log("voici les goodie a update", goodieData);
+
+      if (images && images[0] instanceof String ) {
+        console.log("les image existe :", images);
+        const uploadedImages = [];
+        for (const image of images) {
+          const myCloud: ICloudinaryUploadResponse = (await uploader(
+            image
+          )) as ICloudinaryUploadResponse;
+
+          uploadedImages.push({
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url
+          });
+        }
+        data.images = uploadedImages;
+      }
+
+      const goodie = await GoodieModel.findByIdAndUpdate(
+        goodieId,
+        { $set: data },
+        { new: true }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: goodie
+      });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -117,8 +153,10 @@ export const getAllGoodies = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const goodies = await GoodieModel.find({ show: true });
+      console.log(" les goodies", goodies);
 
-      res.status(200).json({
+      res.status(201).json({
+        success: true,
         message: goodies
       });
     } catch (error: any) {
@@ -142,6 +180,22 @@ export const getAdminAllGoodies = CatchAsyncError(
 export const deleteGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const { id } = req.params;
+
+      const goodie = await GoodieModel.findById(id);
+
+      if (!goodie) {
+        return next(new ErrorHandler("goodie not found", 404));
+      }
+
+      await goodie.deleteOne({ id });
+
+      // await redis.del(id);
+
+      res.status(200).json({
+        success: true,
+        message: "goodie deleted successfully"
+      });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }

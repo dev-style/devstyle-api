@@ -18,6 +18,7 @@ export const getAllGoodiesService = async (res: Response) => {
   const goodies = await GoodieModel.find().sort({ createdAt: -1 });
 
   res.status(200).json({
+    success:true,
     message: goodies,
   });
 };
