@@ -93,14 +93,11 @@ export const editGoodie = CatchAsyncError(
       const images = data.images;
       const goodieId = req.params.id;
 
-      console.log("le id", goodieId);
 
       const goodieData = await GoodieModel.findById({ _id: goodieId });
 
-      console.log("voici les goodie a update", goodieData);
 
       if (images && images[0] instanceof String ) {
-        console.log("les image existe :", images);
         const uploadedImages = [];
         for (const image of images) {
           const myCloud: ICloudinaryUploadResponse = (await uploader(
