@@ -42,7 +42,6 @@ export const getAllCollections = CatchAsyncError(
     const results = await CollectionModel.find({ show: true });
 
     res.status(201).json({
-      success: true,
       message: results
     });
 

@@ -47,7 +47,7 @@ export const uploadGoodie = CatchAsyncError(
       const results = await GoodieModel.create(data);
 
       res.status(201).json({
-        success: true,
+
         message: data,
       });
     } catch (error: any) {
@@ -122,7 +122,6 @@ export const editGoodie = CatchAsyncError(
       );
 
       res.status(200).json({
-        success: true,
         message: goodie
       });
     } catch (error: any) {
@@ -155,7 +154,6 @@ export const getAllGoodies = CatchAsyncError(
       const goodies = await GoodieModel.find({ show: true });
 
       res.status(200).json({
-        success: true,
         message: goodies
 
       });
@@ -193,7 +191,6 @@ export const deleteGoodie = CatchAsyncError(
       // await redis.del(id);
 
       res.status(200).json({
-        success: true,
         message: "goodie deleted successfully"
       });
     } catch (error: any) {
