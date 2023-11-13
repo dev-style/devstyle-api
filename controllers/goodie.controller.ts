@@ -155,7 +155,7 @@ export const getAllGoodies = CatchAsyncError(
       const goodies = await GoodieModel.find({ show: true });
       console.log(" les goodies", goodies);
 
-      res.status(201).json({
+      res.status(200).json({
         success: true,
         message: goodies
       });
