@@ -35,7 +35,9 @@ goodieRoute.put("/goodie/update/views/:slug", updateViews);
 goodieRoute.put("/goodie/update/likes/:slug", updateLikes);
 
 goodieRoute.get("/goodie/all", getAllGoodies);
+
 goodieRoute.get("/goodie/:slug", getSingleGoodie);
+
 goodieRoute.get("/goodies/new-goodies", getNewGoodies);
 goodieRoute.get("/goodies/hot-goodies", getHotGoodies);
 goodieRoute.get(
