@@ -25,7 +25,7 @@ export const getAllSizes = CatchAsyncError(
       const Size = await SizeModel.find();
 
       res.status(200).json({
-        success: true,
+
         message: Size,
       });
     } catch (error: any) {
