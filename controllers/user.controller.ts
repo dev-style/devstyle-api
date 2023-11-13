@@ -424,7 +424,7 @@ export const updateUserRole = CatchAsyncError(
 
       const isUserExist = await userModel.findOne({ email });
       if (isUserExist) {
-        const id = isUserExist._id;
+        const id = String(isUserExist._id);
         updateUserRoleService(res, id, role, social, colors);
       } else {
         res.status(400).json({
