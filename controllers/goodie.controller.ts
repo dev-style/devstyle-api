@@ -46,7 +46,7 @@ export const uploadGoodie = CatchAsyncError(
 
       const results = await GoodieModel.create(data);
 
-      res.status(201).json({
+      res.status(200).json({
 
         message: data,
       });
