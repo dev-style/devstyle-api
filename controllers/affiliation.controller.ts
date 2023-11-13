@@ -27,7 +27,7 @@ export const createAffiliation = CatchAsyncError(
         }
       }
 
-      const data: IAffiliation = {
+      const data = {
         affiliateCode,
         ambassadorId,
         ambassadorName,

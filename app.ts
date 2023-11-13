@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 export const app = express();
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import connectDB from "./utils/db";
 import { ErrorMiddleware } from "./middleware/error";
 import userRouter from "./routes/user.route";
 import goodieRoute from "./routes/goodie.route";
@@ -41,7 +42,7 @@ app.use((req, res, next) => {
 app.use(
   cors({
     origin: ["http://localhost:3000"],
-    credentials: true
+    credentials: true,
   })
 );
 
@@ -50,7 +51,7 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: "draft-7",
-  legacyHeaders: false
+  legacyHeaders: false,
 });
 
 // routes
@@ -74,7 +75,7 @@ app.use(
 // testing api
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
-    message: "Welcome to the otherside🙂"
+    message: "Welcome to the otherside🙂",
   });
 });
 
@@ -88,3 +89,5 @@ app.all("*", (req: Request, res: Response, next: NextFunction) => {
 // middleware calls
 app.use(limiter);
 app.use(ErrorMiddleware);
+
+export default () => connectDB().then(() => app);
