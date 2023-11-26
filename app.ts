@@ -41,8 +41,8 @@ app.use((req, res, next) => {
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
-    credentials: true,
+    origin: ["http://localhost:3000", "https://dev-style.com"],
+    credentials: true
   })
 );
 
@@ -51,7 +51,7 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: "draft-7",
-  legacyHeaders: false,
+  legacyHeaders: false
 });
 
 // routes
@@ -75,7 +75,7 @@ app.use(
 // testing api
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
-    message: "Welcome to the otherside🙂",
+    message: "Welcome to the otherside🙂"
   });
 });
 
