@@ -62,7 +62,14 @@ export interface INewsletter extends mongoose.Document {
 }
 
 export interface IOrder extends mongoose.Document {
-  goodies: [{}];
+  goodies: [
+    {
+      name: string;
+      price: number;
+      quantity: number;
+      total: number;
+    }
+  ];
 
   status: string;
   email: string;

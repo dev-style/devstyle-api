@@ -31,7 +31,7 @@ export const createOrder = CatchAsyncError(
 
       const mailData = {
         order: {
-          _id: "dfsf",
+          _id: Math.random() * 100000000,
           goodies: goodies,
           status: status,
           email: email,
