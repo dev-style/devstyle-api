@@ -26,22 +26,15 @@ app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 
 /*****cors error protection and data parsing*****/
-app.use((req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  );
-  next();
-});
 
 app.use(
   cors({
     origin: ["http://localhost:3000", "https://dev-style.com"],
-    credentials: true
+    credentials: true,
+    exposedHeaders: ["set-cookie"], // Si vous utilisez des cookies, exposez-les pour le navigateur
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Ajoutez les méthodes nécessaires pour votre application
+    preflightContinue: false,
+    optionsSuccessStatus: 204
   })
 );
 
