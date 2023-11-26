@@ -18,6 +18,9 @@ const sendMail = async (options: EmailOptions): Promise<void> => {
     auth: {
       user: process.env.SMTP_MAIL,
       pass: process.env.SMTP_PASSWORD
+    },
+    tls: {
+      rejectUnauthorized: false
     }
   });
 
@@ -27,7 +30,7 @@ const sendMail = async (options: EmailOptions): Promise<void> => {
   const templatePath = path.join(__dirname, "../mails", template);
 
   // Render the email template with EJS
-  const html: string = await ejs.renderFile(templatePath, data);
+  const html: string  = await ejs.renderFile(templatePath, data);
 
   const mailOptions = {
     from: process.env.SMTP_MAIL,

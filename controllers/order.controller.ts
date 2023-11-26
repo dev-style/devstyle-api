@@ -18,12 +18,53 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 export const createOrder = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = req.body;
+      const { goodies, name, email, status, initDate } = req.body as IOrder;
+
+      const data = {
+        name,
+        goodies,
+        email,
+        status,
+        initDate
+      };
+
+      console.log(data);
+
+      const mailData = {
+        order: {
+          _id: Math.random() * 100000000,
+          name: name,
+          goodies: goodies,
+          status: status,
+          email: email,
+          initDate: new Date().toLocaleDateString("in-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          })
+        }
+      };
+
+      const html = await ejs.renderFile(
+        path.join(__dirname, "../mails/order-confirmation.ejs"),
+        { order: mailData }
+      );
+
+      try {
+        await sendMail({
+          email: email,
+          subject: "Order confirmation",
+          template: "order-confirmation.ejs",
+          data: mailData
+        });
+      } catch (error) {
+        console.log(error);
+      }
 
       const newOrder = await OrderModel.create(data);
 
       res.status(200).json({
-        newOrder,
+        newOrder
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -38,7 +79,7 @@ export const getAllOrders = CatchAsyncError(
       const orders = await OrderModel.find().sort({ createdAt: -1 });
 
       res.status(200).json({
-        orders,
+        message: orders
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -57,6 +98,31 @@ export const newPayment = CatchAsyncError(
     try {
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+// Delete goodie --- only for admin
+export const deleteOrder = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+
+      const order = await OrderModel.findById(id);
+
+      if (!order) {
+        return next(new ErrorHandler("order not found", 404));
+      }
+
+      await order.deleteOne({ id });
+
+      // await redis.del(id);
+
+      res.status(200).json({
+        message: "order deleted successfully"
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
     }
   }
 );
