@@ -4,11 +4,11 @@ import {
   createOrder,
   getAllOrders,
   newPayment,
-  sendStripePublishableKey,
+  sendStripePublishableKey
 } from "../controllers/order.controller";
 const orderRouter = express.Router();
 
-orderRouter.post("/create-order", isAutheticated, createOrder);
+orderRouter.post("/order/create", createOrder);
 
 orderRouter.get(
   "/get-orders",

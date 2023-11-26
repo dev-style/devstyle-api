@@ -62,11 +62,11 @@ export interface INewsletter extends mongoose.Document {
 }
 
 export interface IOrder extends mongoose.Document {
-  number: number;
-  description: string;
+  goodies: [{}];
+
   status: string;
+  email: string;
   initDate: Date;
-  endDate: Date;
 }
 
 export interface IPartner extends mongoose.Document {

@@ -5,17 +5,17 @@ import { IOrder } from "../lib/interfaces";
 
 const orderSchema: Schema<IOrder> = new mongoose.Schema(
   {
-    number: { type: Number, required: true },
-    description: {
-      type: String,
-      required: true,
-    },
+    goodies: [{}],
+
     status: {
       type: String,
-      default: "pending",
+      default: "pending"
     },
-    initDate: { type: Date, default: Date.now() },
-    endDate: { type: Date },
+    email: {
+      type: String
+      // required: true
+    },
+    initDate: { type: Date, default: Date.now() }
   },
 
   { timestamps: true }
