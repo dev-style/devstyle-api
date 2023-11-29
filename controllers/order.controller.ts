@@ -5,12 +5,12 @@ import userModel from "../models/user.model";
 import path from "path";
 import ejs from "ejs";
 import sendMail from "../utils/sendMail";
-import NotificationModel from "../models/size.model";
 import { getAllOrdersService, newOrder } from "../services/order.service";
 import { redis } from "../utils/redis";
 import { IGoodie, IOrder } from "../lib/interfaces";
 import GoodieModel from "../models/goodie.model";
 import OrderModel from "../models/order.model";
+import NotificationModel from "../models/notification.model";
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -62,6 +62,12 @@ export const createOrder = CatchAsyncError(
       }
 
       const newOrder = await OrderModel.create(data);
+
+      await NotificationModel.create({
+        user: data.name,
+        title: "New Order",
+        message: `You have a new order from ${goodies[0].name}`
+      });
 
       res.status(200).json({
         newOrder

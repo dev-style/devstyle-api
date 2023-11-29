@@ -127,3 +127,11 @@ export interface ICloudinaryUploadResponse extends mongoose.Document {
   public_id: string;
   secure_url: string;
 }
+
+
+export interface INotification extends Document {
+  title: string;
+  message: string;
+  status: string;
+  userId: string;
+}
