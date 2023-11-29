@@ -93,20 +93,7 @@ export const getAllOrders = CatchAsyncError(
   }
 );
 
-//  send stripe publishble key
-export const sendStripePublishableKey = CatchAsyncError(
-  async (req: Request, res: Response) => {}
-);
 
-// new payment
-export const newPayment = CatchAsyncError(
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-    } catch (error: any) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  }
-);
 
 // Delete goodie --- only for admin
 export const deleteOrder = CatchAsyncError(
@@ -129,6 +116,35 @@ export const deleteOrder = CatchAsyncError(
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+
+// edit goodie
+export const editOrder = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = req.body;
+      const orderId = req.params.id;
+
+
+      const orderData = await OrderModel.findById({ _id: orderId });
+
+
+
+
+      const order = await OrderModel.findByIdAndUpdate(
+        orderData,
+        { $set: data },
+        { new: true }
+      );
+
+      res.status(200).json({
+        message: order
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
     }
   }
 );
