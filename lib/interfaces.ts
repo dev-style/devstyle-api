@@ -42,6 +42,7 @@ export interface IGoodie extends mongoose.Document {
     public_id: string;
     url: string;
   }>;
+  mainImage: any;
   availableColors: Array<string>;
   backgroundColors: Array<string>;
   likes: number;
@@ -62,7 +63,7 @@ export interface INewsletter extends mongoose.Document {
 }
 
 export interface IOrder extends mongoose.Document {
-  name:string;
+  name: string;
   goodies: [
     {
       name: string;
@@ -127,7 +128,6 @@ export interface ICloudinaryUploadResponse extends mongoose.Document {
   public_id: string;
   secure_url: string;
 }
-
 
 export interface INotification extends Document {
   title: string;

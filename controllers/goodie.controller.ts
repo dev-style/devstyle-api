@@ -41,13 +41,13 @@ export const uploadGoodie = CatchAsyncError(
             url: myCloud.secure_url,
           });
         }
+        data.mainImage = uploadedImages[0];
         data.images = uploadedImages;
       }
 
       const results = await GoodieModel.create(data);
 
       res.status(200).json({
-
         message: data,
       });
     } catch (error: any) {
@@ -93,11 +93,9 @@ export const editGoodie = CatchAsyncError(
       const images = data.images;
       const goodieId = req.params.id;
 
-
       const goodieData = await GoodieModel.findById({ _id: goodieId });
 
-
-      if (images && images[0] instanceof String ) {
+      if (images && images[0] instanceof String) {
         const uploadedImages = [];
         for (const image of images) {
           const myCloud: ICloudinaryUploadResponse = (await uploader(
@@ -106,7 +104,7 @@ export const editGoodie = CatchAsyncError(
 
           uploadedImages.push({
             public_id: myCloud.public_id,
-            url: myCloud.secure_url
+            url: myCloud.secure_url,
           });
         }
         data.images = uploadedImages;
@@ -119,7 +117,7 @@ export const editGoodie = CatchAsyncError(
       );
 
       res.status(200).json({
-        message: goodie
+        message: goodie,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -151,8 +149,7 @@ export const getAllGoodies = CatchAsyncError(
       const goodies = await GoodieModel.find({ show: true });
 
       res.status(200).json({
-        message: goodies
-
+        message: goodies,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -188,7 +185,7 @@ export const deleteGoodie = CatchAsyncError(
       // await redis.del(id);
 
       res.status(200).json({
-        message: "goodie deleted successfully"
+        message: "goodie deleted successfully",
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
