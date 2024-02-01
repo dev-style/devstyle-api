@@ -18,14 +18,16 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 export const createOrder = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { goodies, name, email, status, initDate } = req.body as IOrder;
+      const { goodies, name, email, number, status, initDate } =
+        req.body as IOrder;
 
       const data = {
         name,
         goodies,
         email,
+        number,
         status,
-        initDate
+        initDate,
       };
 
       console.log(data);
@@ -40,9 +42,9 @@ export const createOrder = CatchAsyncError(
           initDate: new Date().toLocaleDateString("in-US", {
             year: "numeric",
             month: "long",
-            day: "numeric"
-          })
-        }
+            day: "numeric",
+          }),
+        },
       };
 
       const html = await ejs.renderFile(
@@ -55,7 +57,7 @@ export const createOrder = CatchAsyncError(
           email: email,
           subject: "Order confirmation",
           template: "order-confirmation.ejs",
-          data: mailData
+          data: mailData,
         });
       } catch (error) {
         console.log(error);
@@ -66,11 +68,11 @@ export const createOrder = CatchAsyncError(
       await NotificationModel.create({
         user: data.name,
         title: "New Order",
-        message: `You have a new order from ${goodies[0].name}`
+        message: `You have a new order from ${goodies[0].name}`,
       });
 
       res.status(200).json({
-        newOrder
+        newOrder,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -85,15 +87,13 @@ export const getAllOrders = CatchAsyncError(
       const orders = await OrderModel.find().sort({ createdAt: -1 });
 
       res.status(200).json({
-        message: orders
+        message: orders,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
   }
 );
-
-
 
 // Delete goodie --- only for admin
 export const deleteOrder = CatchAsyncError(
@@ -112,14 +112,13 @@ export const deleteOrder = CatchAsyncError(
       // await redis.del(id);
 
       res.status(200).json({
-        message: "order deleted successfully"
+        message: "order deleted successfully",
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
   }
 );
-
 
 // edit goodie
 export const editOrder = CatchAsyncError(
@@ -128,11 +127,7 @@ export const editOrder = CatchAsyncError(
       const data = req.body;
       const orderId = req.params.id;
 
-
       const orderData = await OrderModel.findById({ _id: orderId });
-
-
-
 
       const order = await OrderModel.findByIdAndUpdate(
         orderData,
@@ -141,7 +136,7 @@ export const editOrder = CatchAsyncError(
       );
 
       res.status(200).json({
-        message: order
+        message: order,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));

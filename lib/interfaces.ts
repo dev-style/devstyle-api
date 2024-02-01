@@ -75,6 +75,7 @@ export interface IOrder extends mongoose.Document {
 
   status: string;
   email: string;
+  number?: number;
   initDate: Date;
 }
 
