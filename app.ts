@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 export const app = express();
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import connectDB from "./utils/db";
 import { ErrorMiddleware } from "./middleware/error";
 import userRouter from "./routes/user.route";
 import goodieRoute from "./routes/goodie.route";
@@ -17,6 +18,7 @@ import socialRoute from "./routes/social.route";
 import affiliationRoute from "./routes/affiliation.route";
 import newsletterRoute from "./routes/newsletter.route";
 import announcementRoute from "./routes/announcement.route";
+import notificationRoute from "./routes/notification.route";
 
 // body parser
 app.use(express.json({ limit: "50mb" }));
@@ -25,25 +27,19 @@ app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 
 /*****cors error protection and data parsing*****/
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  );
-  next();
-});
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
-    credentials: true
+    origin: ["http://localhost:3000", "https://dev-style.com"],
+    credentials: true,
+    exposedHeaders: ["set-cookie"], // Si vous utilisez des cookies, exposez-les pour le navigateur
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Ajoutez les méthodes nécessaires pour votre application
+    preflightContinue: false,
+    optionsSuccessStatus: 204
   })
 );
+
+
 
 // api requests limit
 const limiter = rateLimit({
@@ -67,6 +63,7 @@ app.use(
   socialRoute,
   affiliationRoute,
   newsletterRoute,
+  notificationRoute,
 
   analyticsRouter
 );
@@ -88,3 +85,5 @@ app.all("*", (req: Request, res: Response, next: NextFunction) => {
 // middleware calls
 app.use(limiter);
 app.use(ErrorMiddleware);
+
+export default () => connectDB().then(() => app);

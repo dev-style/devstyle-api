@@ -1,34 +1,34 @@
 require("dotenv").config();
 import mongoose from "mongoose";
 
-export interface IAffiliation {
+export interface IAffiliation extends mongoose.Document {
   ambassadorId: mongoose.Schema.Types.ObjectId;
   ambassadorName: string;
   affiliateCode: string;
   clicksCount: number;
 }
 
-export interface IAnnouncement {
+export interface IAnnouncement extends mongoose.Document {
   text: string;
   link: string;
 }
 
-export interface IClient {
+export interface IClient extends mongoose.Document {
   name: string;
   number: number;
   from: string;
 }
 
-export interface ICollection {
+export interface ICollection extends mongoose.Document {
   title: string;
   slug: string;
   colors: string;
-  image: {} | string;
+  image: {};
   views: number;
   show: boolean;
 }
 
-export interface IGoodie {
+export interface IGoodie extends mongoose.Document {
   name: string;
   description: string;
   slug: string;
@@ -42,64 +42,70 @@ export interface IGoodie {
     public_id: string;
     url: string;
   }>;
+  mainImage: any;
   availableColors: Array<string>;
   backgroundColors: Array<string>;
   likes: number;
   show: boolean;
 }
 
-export interface IHeroSection {
+export interface IHeroSection extends mongoose.Document {
   text: string;
-  image:
-    | {
-        public_id: string;
-        url: string;
-      }
-    | string;
+  image: {
+    public_id: string;
+    url: string;
+  };
   show: boolean;
 }
 
-export interface INewsletter {
+export interface INewsletter extends mongoose.Document {
   email: string;
 }
 
-export interface IOrder {
-  number: number;
-  description: string;
+export interface IOrder extends mongoose.Document {
+  name: string;
+  goodies: [
+    {
+      name: string;
+      price: number;
+      quantity: number;
+      total: number;
+    }
+  ];
+
   status: string;
+  email: string;
+  number?: number;
   initDate: Date;
-  endDate: Date;
 }
 
-export interface IPartner {
+export interface IPartner extends mongoose.Document {
   name: string;
-  logoColor: {} | string;
-  logoWhite: {} | string;
-  logoBlack: {} | string;
+  logoColor: {};
+  logoWhite: {};
+  logoBlack: {};
   link: string;
   show: boolean;
 }
 
-export interface ISize {
+export interface ISize extends mongoose.Document {
   id: string;
   size: string;
 }
 
-export interface ISocial {
+export interface ISocial extends mongoose.Document {
   id: number;
   name: string;
 }
 
-export interface IUser {
+export interface IUser extends mongoose.Document {
   name: string;
   email: string;
   password: string;
-  avatar:
-    | {
-        public_id: string;
-        url: string;
-      }
-    | string;
+  avatar: {
+    public_id: string;
+    url: string;
+  };
   role: string;
   isVerified: boolean;
   comparePassword: (password: string) => Promise<boolean>;
@@ -107,7 +113,7 @@ export interface IUser {
   SignRefreshToken: () => string;
 }
 
-export interface IAmbassador {
+export interface IAmbassador extends mongoose.Document {
   userId: mongoose.Schema.Types.ObjectId;
   name: string;
   social: Array<{
@@ -119,8 +125,14 @@ export interface IAmbassador {
   show: boolean;
 }
 
-
-export interface ICloudinaryUploadResponse {
+export interface ICloudinaryUploadResponse extends mongoose.Document {
   public_id: string;
   secure_url: string;
+}
+
+export interface INotification extends Document {
+  title: string;
+  message: string;
+  status: string;
+  userId: string;
 }

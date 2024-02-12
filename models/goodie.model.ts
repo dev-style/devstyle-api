@@ -47,7 +47,6 @@ const goodieSchema: Schema<IGoodie> = new mongoose.Schema(
     ],
     images: [
       {
-
         public_id: {
           type: String,
         },
@@ -56,6 +55,14 @@ const goodieSchema: Schema<IGoodie> = new mongoose.Schema(
         },
       },
     ],
+    mainImage: {
+      public_id: {
+        type: String,
+      },
+      url: {
+        type: String,
+      },
+    },
     availableColors: [String],
     backgroundColors: [String],
 

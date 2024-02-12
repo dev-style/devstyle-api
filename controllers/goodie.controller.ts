@@ -16,12 +16,12 @@ export const uploadGoodie = CatchAsyncError(
       const data: IGoodie = req.body;
 
       const collection = await CollectionModel.findOne({
-        _id: data.fromCollection
+        _id: data.fromCollection,
       });
       const collectionSlug = collection?.slug;
       if (!collection) {
         res.status(500).json({
-          message: "collection dont exist"
+          message: "collection dont exist",
         });
       }
 
@@ -38,17 +38,17 @@ export const uploadGoodie = CatchAsyncError(
 
           uploadedImages.push({
             public_id: myCloud.public_id,
-            url: myCloud.secure_url
+            url: myCloud.secure_url,
           });
         }
+        data.mainImage = uploadedImages[0];
         data.images = uploadedImages;
       }
 
       const results = await GoodieModel.create(data);
 
-      res.status(201).json({
-        success: true,
-        message: data
+      res.status(200).json({
+        message: data,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -65,14 +65,14 @@ const uploader = async (path: any) =>
         gravity: "north_west",
         x: 5,
         y: 5,
-        width: "0.5"
+        width: "0.5",
       },
       {
         overlay: "devstyle_watermark",
         opacity: 6.5,
         gravity: "center",
         width: "1.0",
-        angle: 45
+        angle: 45,
       },
       {
         overlay: "devstyle_watermark",
@@ -80,15 +80,45 @@ const uploader = async (path: any) =>
         gravity: "south_east",
         x: 5,
         y: 5,
-        width: "0.5"
-      }
-    ]
+        width: "0.5",
+      },
+    ],
   });
 
 // edit goodie
 export const editGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const data = req.body;
+      const images = data.images;
+      const goodieId = req.params.id;
+
+      const goodieData = await GoodieModel.findById({ _id: goodieId });
+
+      if (images && images[0] instanceof String) {
+        const uploadedImages = [];
+        for (const image of images) {
+          const myCloud: ICloudinaryUploadResponse = (await uploader(
+            image
+          )) as ICloudinaryUploadResponse;
+
+          uploadedImages.push({
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
+          });
+        }
+        data.images = uploadedImages;
+      }
+
+      const goodie = await GoodieModel.findByIdAndUpdate(
+        goodieId,
+        { $set: data },
+        { new: true }
+      );
+
+      res.status(200).json({
+        message: goodie,
+      });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -104,7 +134,7 @@ export const getSingleGoodie = CatchAsyncError(
         .populate("size");
 
       res.status(200).json({
-        message: goodie
+        message: goodie,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -119,7 +149,7 @@ export const getAllGoodies = CatchAsyncError(
       const goodies = await GoodieModel.find({ show: true });
 
       res.status(200).json({
-        message: goodies
+        message: goodies,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -142,6 +172,21 @@ export const getAdminAllGoodies = CatchAsyncError(
 export const deleteGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const { id } = req.params;
+
+      const goodie = await GoodieModel.findById(id);
+
+      if (!goodie) {
+        return next(new ErrorHandler("goodie not found", 404));
+      }
+
+      await goodie.deleteOne({ id });
+
+      // await redis.del(id);
+
+      res.status(200).json({
+        message: "goodie deleted successfully",
+      });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
@@ -160,7 +205,7 @@ export const updateLikes = CatchAsyncError(
       );
 
       res.status(200).json({
-        message: goodie
+        message: goodie,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -180,7 +225,7 @@ export const updateViews = CatchAsyncError(
       );
 
       res.status(200).json({
-        message: goodie
+        message: goodie,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -200,7 +245,7 @@ export const getNewGoodies = CatchAsyncError(
         .sort({ createdAt: -1 });
 
       res.status(200).json({
-        message: goodies
+        message: goodies,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -221,7 +266,7 @@ export const getHotGoodies = CatchAsyncError(
         .limit(8);
 
       res.status(200).json({
-        message: goodies
+        message: goodies,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -234,8 +279,6 @@ export const getHotGoodies = CatchAsyncError(
 export const getHotGoodiesOfCollection = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const skipCount = parseInt(req.headers.skip as string, 10);
-
       const goodies = await GoodieModel.aggregate([
         {
           $match: {
@@ -243,14 +286,14 @@ export const getHotGoodiesOfCollection = CatchAsyncError(
               req.params.collectionID
             ),
             show: true,
-            _id: { $ne: new mongoose.Types.ObjectId(req.params.goodieID) }
-          }
+            _id: { $ne: new mongoose.Types.ObjectId(req.params.goodieID) },
+          },
         },
-        { $sample: { size: 4 } }
+        { $sample: { size: 4 } },
       ]);
 
       res.status(200).json({
-        message: goodies
+        message: goodies,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
