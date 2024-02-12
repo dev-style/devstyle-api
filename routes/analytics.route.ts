@@ -22,7 +22,7 @@ analyticsRouter.get(
 );
 
 analyticsRouter.get(
-  "/get-courses-analytics",
+  "/get-goodies-analytics",
   isAutheticated,
   authorizeRoles("admin"),
   getGoodiesAnalytics

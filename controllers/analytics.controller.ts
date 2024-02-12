@@ -4,6 +4,7 @@ import { CatchAsyncError } from "../middleware/catchAsyncErrors";
 import userModel from "../models/user.model";
 import OrderModel from "../models/social.model";
 import { generateLast12MothsData } from "../utils/analytics.generator";
+import GoodieModel from "../models/goodie.model";
 
 // get users analytics --- only for admin
 export const getUsersAnalytics = CatchAsyncError(
@@ -19,6 +20,11 @@ export const getUsersAnalytics = CatchAsyncError(
 export const getGoodiesAnalytics = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const goodies = await generateLast12MothsData(GoodieModel);
+
+      res.status(200).json({
+        message: goodies,
+      });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -31,7 +37,7 @@ export const getOrderAnalytics = CatchAsyncError(
     try {
       const orders = await generateLast12MothsData(OrderModel);
       res.status(200).json({
-        message: orders
+        message: orders,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
