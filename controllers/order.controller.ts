@@ -135,6 +135,41 @@ export const editOrder = CatchAsyncError(
         { new: true }
       );
 
+      if (order) {
+        const { _id, name, goodies, status, email, initDate } = order;
+
+        const mailData = {
+          order: {
+            _id: _id,
+            name: name,
+            goodies: goodies,
+            status: status,
+            email: email,
+            initDate: new Date().toLocaleDateString("in-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
+          },
+        };
+
+        const html = await ejs.renderFile(
+          path.join(__dirname, "../mails/order-confirmation.ejs"),
+          { order: mailData }
+        );
+
+        try {
+          await sendMail({
+            email: email,
+            subject: "Order confirmation",
+            template: "order-confirmation.ejs",
+            data: mailData,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
       res.status(200).json({
         message: order,
       });
