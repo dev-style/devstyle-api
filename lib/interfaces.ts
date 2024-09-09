@@ -42,6 +42,10 @@ export interface IGoodie extends mongoose.Document {
     public_id: string;
     url: string;
   }>;
+  mainImage:{
+    public_id: string;
+    url:string;
+  };
   availableColors: Array<string>;
   backgroundColors: Array<string>;
   likes: number;
