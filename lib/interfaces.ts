@@ -2,10 +2,10 @@ require("dotenv").config();
 import mongoose from "mongoose";
 
 export interface IAffiliation extends mongoose.Document {
-  ambassadorId: mongoose.Schema.Types.ObjectId;
-  ambassadorName: string;
+  ambassador: mongoose.Schema.Types.ObjectId;
   affiliateCode: string;
   clicksCount: number;
+  status:string;
 }
 
 export interface IAnnouncement extends mongoose.Document {
