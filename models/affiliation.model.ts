@@ -5,24 +5,26 @@ import { IAffiliation } from "../lib/interfaces";
 
 const AffiliationSchema: Schema<IAffiliation> = new mongoose.Schema(
   {
-    ambassadorId: {
+    ambassador: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Ambassador",
-      required: true,
-    },
-    ambassadorName: {
-      type: String,
       required: true,
     },
     affiliateCode: {
       type: String,
       required: true,
     },
+   
 
     clicksCount: {
       type: Number,
       default: 0,
       require: false,
+    },
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
     },
   },
   { timestamps: true }

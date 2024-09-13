@@ -3,41 +3,47 @@ import { CatchAsyncError } from "../middleware/catchAsyncErrors";
 import ErrorHandler from "../utils/ErrorHandler";
 import AffiliationModel from "../models/affiliation.model";
 import { IAffiliation } from "../lib/interfaces";
+import AmbassadorModel from "../models/ambassador.model";
 
 export const createAffiliation = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { ambassadorId, ambassadorName } = req.body;
+      console.log("ambassadorId,ambassadorName", ambassadorId, ambassadorName);
 
-      let affiliateCode = "";
-      let isUsed = true;
+      let ambassador = await AmbassadorModel.findById(ambassadorId).populate(
+        "userId"
+      );
+      console.log("ambassador", ambassador);
 
-      while (isUsed) {
-        affiliateCode = Math.random()
-          .toString(36)
-          .slice(2, 7)
-          .toLocaleUpperCase();
+      if (!ambassador)
+        return res.status(200).json({ message: "cannot find ambassador" });
 
-        const affiliate = await AffiliationModel.findOne({
-          affiliateCode,
-        });
+      const username = (
+        ambassadorName || ambassador.name.toLowerCase()
+      ).substring(0, 3);
+      console.log("username", username);
 
-        if (!affiliate?._id) {
-          isUsed = false;
-        }
-      }
+      const affiliateCode = `Dsa-${username}-${
+        Math.floor(Math.random() * 100) + 100
+      }`;
 
-      const data = {
-        affiliateCode,
-        ambassadorId,
-        ambassadorName,
-        clicksCount: 0,
-      };
+      const expirationTime = 24 * 60 * 60 * 1000; // 1 jour en millisecondes
 
-      const newAffiliation = await AffiliationModel.create(data);
+      // Crée le lien d'affiliation avec la date d'expiration
+      const affiliation = new AffiliationModel({
+        affiliateCode: affiliateCode,
+
+        ambassador: ambassadorId,
+        status: "active",
+      });
+
+      await affiliation.save();
+
+      res.status(200).json({ affiliation: affiliation });
 
       res.status(200).json({
-        newAffiliation,
+        affiliation,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));

@@ -1,13 +1,10 @@
 import express from "express";
 
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
+import { createAmbassador } from "../controllers/ambassador.controller";
 
 const ambassadorRoute = express.Router();
 
-ambassadorRoute.post("/registration-ambassador");
-
-ambassadorRoute.post("/activate-ambassador");
-
-ambassadorRoute.post("/login-ambassador");
+ambassadorRoute.post("/ambassador/create", createAmbassador);
 
 export default ambassadorRoute;
