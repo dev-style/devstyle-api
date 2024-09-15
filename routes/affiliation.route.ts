@@ -5,7 +5,7 @@ const affiliationRoute = express.Router();
 
 affiliationRoute.post("/affiliation/create", isAutheticated,authorizeRoles("admin"), createAffiliation );
 
-affiliationRoute.put("/affiliation/:affiliateCode", isAutheticated,authorizeRoles("admin"), updateClickCount );
+affiliationRoute.put("/affiliation/:affiliate", updateClickCount );
 
 affiliationRoute.get("/get-affiliation/:type",);
 
