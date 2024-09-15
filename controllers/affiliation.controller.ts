@@ -53,10 +53,12 @@ export const createAffiliation = CatchAsyncError(
 export const updateClickCount = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { affiliateCode } = req.params;
-      const affiliate = await AffiliationModel.findOneAndUpdate(
+      const { affiliate } = req.params;
+      console.log("test count affiliate");
+      console.log("affiliate", affiliate);
+      const affiliateLink = await AffiliationModel.findOneAndUpdate(
         {
-          affiliateCode,
+          affiliateCode:affiliate,
         },
         {
           $inc: { clicksCount: 1 },
@@ -64,10 +66,10 @@ export const updateClickCount = CatchAsyncError(
         { new: true }
       );
 
-      if (!affiliate?._id) {
-        return res.status(404).json({ error: "Affiliate code not found" });
-      }
-      return res.status(200).json({ clickCount: affiliate.clicksCount });
+      // if (!affiliate?._id) {
+      //   return res.status(404).json({ error: "Affiliate code not found" });
+      // }
+      return res.status(200).json({ status: "success" });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: "Internal Server Error" });
