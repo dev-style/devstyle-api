@@ -21,7 +21,7 @@ const collectionSchema: Schema<ICollection> = new mongoose.Schema(
     },
     image: {
       public_id: String,
-      ur: String,
+      url: String,
     },
     views: Number,
     show: {

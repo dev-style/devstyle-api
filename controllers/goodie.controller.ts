@@ -43,6 +43,7 @@ export const uploadGoodie = CatchAsyncError(
             url: myCloud.secure_url,
           });
         }
+        data.mainImage = uploadedImages[0];
         data.images = uploadedImages;
         data.mainImage = uploadedImages[0];
       }
