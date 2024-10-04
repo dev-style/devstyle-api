@@ -28,8 +28,7 @@ export const getGoodiesAnalytics = CatchAsyncError(
       const goodies = await generateLast12MothsData(GoodieModel);
 
       res.status(200).json({
-        success: true,
-        goodies,
+        message: goodies,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -43,8 +42,7 @@ export const getOrderAnalytics = CatchAsyncError(
     try {
       const orders = await generateLast12MothsData(OrderModel);
       res.status(200).json({
-        success: true,
-        orders,
+        message: orders,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));

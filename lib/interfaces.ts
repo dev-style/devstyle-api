@@ -66,7 +66,7 @@ export interface INewsletter extends mongoose.Document {
 }
 
 export interface IOrder extends mongoose.Document {
-  name:string;
+  name: string;
   goodies: [
     {
       name: string;
@@ -78,6 +78,7 @@ export interface IOrder extends mongoose.Document {
 
   status: string;
   email: string;
+  number?: number;
   initDate: Date;
 }
 
@@ -130,4 +131,11 @@ export interface IAmbassador extends mongoose.Document {
 export interface ICloudinaryUploadResponse extends mongoose.Document {
   public_id: string;
   secure_url: string;
+}
+
+export interface INotification extends Document {
+  title: string;
+  message: string;
+  status: string;
+  userId: string;
 }
