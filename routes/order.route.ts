@@ -5,14 +5,14 @@ import {
   deleteOrder,
   getAllOrders,
   newPayment,
-  sendStripePublishableKey
+  sendStripePublishableKey,
 } from "../controllers/order.controller";
 const orderRouter = express.Router();
 
 orderRouter.post("/order/create", createOrder);
 
 orderRouter.get(
-  "/order/all",
+  "/get-orders",
   isAutheticated,
   authorizeRoles("admin"),
   getAllOrders
