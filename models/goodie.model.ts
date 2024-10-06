@@ -63,7 +63,6 @@ const goodieSchema: Schema<IGoodie> = new mongoose.Schema(
         type: String,
       },
     },
-
     availableColors: [String],
     backgroundColors: [String],
 

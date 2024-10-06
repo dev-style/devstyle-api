@@ -19,6 +19,7 @@ import affiliationRoute from "./routes/affiliation.route";
 import newsletterRoute from "./routes/newsletter.route";
 import announcementRoute from "./routes/announcement.route";
 import ambassadorRoute from "./routes/ambassador.route";
+import notificationRoute from "./routes/notification.route";
 
 // body parser
 app.use(express.json({ limit: "50mb" }));
@@ -38,6 +39,8 @@ app.use(
     optionsSuccessStatus: 204
   })
 );
+
+
 
 // api requests limit
 const limiter = rateLimit({
@@ -62,6 +65,8 @@ app.use(
   affiliationRoute,
   newsletterRoute,
   ambassadorRoute,
+  notificationRoute,
+
   analyticsRouter
 );
 
