@@ -37,7 +37,7 @@ export interface IGoodie extends mongoose.Document {
   price: number;
   inPromo: boolean;
   views: number;
-  size: Array<ISize>;
+  sizes: Array<ISize>;
   images: Array<{
     public_id: string;
     url: string;
