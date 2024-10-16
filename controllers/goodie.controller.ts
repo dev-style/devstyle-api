@@ -155,7 +155,7 @@ export const getSingleGoodie = CatchAsyncError(
     try {
       const goodie = await GoodieModel.findOne({ slug: req.params.slug })
         .populate("fromCollection")
-        .populate("size");
+        .populate("sizes");
 
       res.status(200).json({
         message: goodie,
