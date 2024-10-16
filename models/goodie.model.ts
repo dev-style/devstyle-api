@@ -38,7 +38,7 @@ const goodieSchema: Schema<IGoodie> = new mongoose.Schema(
     views: {
       type: Number,
     },
-    size: [
+    sizes: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Size",
