@@ -11,6 +11,7 @@ import {
   updateLikes,
   updateViews,
   uploadGoodie,
+  getSearchAllGoodies,
 } from "../controllers/goodie.controller";
 
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
@@ -35,6 +36,7 @@ goodieRoute.put("/goodie/update/views/:slug", updateViews);
 goodieRoute.put("/goodie/update/likes/:slug", updateLikes);
 
 goodieRoute.get("/goodie/all", getAllGoodies);
+goodieRoute.get("/goodie/search/all", getSearchAllGoodies);
 
 goodieRoute.get("/goodie/:slug", getSingleGoodie);
 

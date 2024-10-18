@@ -181,6 +181,22 @@ export const getAllGoodies = CatchAsyncError(
   }
 );
 
+// get search all goodies
+
+export const getSearchAllGoodies = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const goodies = await GoodieModel.find({ show: true }).populate("fromCollection").populate("sizes");
+
+      res.status(200).json({
+        message: goodies,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
 // get all goodies --- only for admin
 export const getAdminAllGoodies = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
