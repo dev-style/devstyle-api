@@ -5,7 +5,7 @@ export interface IAffiliation extends mongoose.Document {
   ambassador: mongoose.Schema.Types.ObjectId;
   affiliateCode: string;
   clicksCount: number;
-  status:string;
+  status: string;
 }
 
 export interface IAnnouncement extends mongoose.Document {
@@ -42,9 +42,9 @@ export interface IGoodie extends mongoose.Document {
     public_id: string;
     url: string;
   }>;
-  mainImage:{
+  mainImage: {
     public_id: string;
-    url:string;
+    url: string;
   };
   availableColors: Array<string>;
   backgroundColors: Array<string>;
@@ -78,6 +78,8 @@ export interface IOrder extends mongoose.Document {
 
   status: string;
   email: string;
+  city: string;
+  district: string;
   number?: number;
   initDate: Date;
 }

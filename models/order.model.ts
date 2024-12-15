@@ -19,6 +19,16 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
       type: String,
       required: true,
     },
+
+    city: {
+      type: String,
+      required: true,
+    },
+    district: {
+      type: String,
+      required: true,
+    },
+
     number: {
       type: Number,
       required: false,

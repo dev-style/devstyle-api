@@ -18,19 +18,21 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 export const createOrder = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { goodies, name, email, number, status, initDate } =
+      const { goodies, name, email, number, city, district, status, initDate } =
         req.body as IOrder;
 
       const data = {
         name,
         goodies,
         email,
+        city,
+        district,
         number,
         status,
         initDate,
       };
 
-      console.log(data);
+      console.log("order i send to you", data);
 
       const mailData = {
         order: {
@@ -72,7 +74,7 @@ export const createOrder = CatchAsyncError(
       });
 
       res.status(200).json({
-        newOrder
+        newOrder,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
@@ -178,4 +180,3 @@ export const editOrder = CatchAsyncError(
     }
   }
 );
-
