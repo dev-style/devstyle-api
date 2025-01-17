@@ -80,6 +80,7 @@ export interface IOrder extends mongoose.Document {
   email: string;
   city: string;
   district: string;
+  paymentMethod:string;
   number?: number;
   initDate: Date;
 }
