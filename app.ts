@@ -20,6 +20,7 @@ import newsletterRoute from "./routes/newsletter.route";
 import announcementRoute from "./routes/announcement.route";
 import ambassadorRoute from "./routes/ambassador.route";
 import notificationRoute from "./routes/notification.route";
+import discountRouter from "./routes/discount.route";
 
 // body parser
 app.use(express.json({ limit: "50mb" }));
@@ -66,7 +67,7 @@ app.use(
   newsletterRoute,
   ambassadorRoute,
   notificationRoute,
-
+  discountRouter,
   analyticsRouter
 );
 

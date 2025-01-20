@@ -8,6 +8,14 @@ export interface IAffiliation extends mongoose.Document {
   status: string;
 }
 
+export interface IDiscount extends mongoose.Document{
+  code:string;
+  percent:number;
+  isActive:boolean;
+  limit:number;
+  uses:number;
+}
+
 export interface IAnnouncement extends mongoose.Document {
   text: string;
   link: string;
