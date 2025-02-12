@@ -14,6 +14,7 @@ export interface IDiscount extends mongoose.Document{
   isActive:boolean;
   limit:number;
   uses:number;
+  goodies:any
 }
 
 export interface IAnnouncement extends mongoose.Document {

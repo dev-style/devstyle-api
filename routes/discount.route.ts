@@ -1,6 +1,7 @@
 import express from "express";
-import { makeDiscount } from "../controllers/discount.controller";
+import {  fetchDiscountByGoodieId, makeDiscount } from "../controllers/discount.controller";
 const discountRouter = express.Router();
 
 discountRouter.post("/discount", makeDiscount);
+discountRouter.get("/discount/:id",fetchDiscountByGoodieId)
 export default discountRouter;

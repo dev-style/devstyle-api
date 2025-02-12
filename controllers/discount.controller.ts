@@ -1,15 +1,18 @@
-import { NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { CatchAsyncError } from "../middleware/catchAsyncErrors";
 import DiscountModel from "../models/discount.model";
 import ErrorHandler from "../utils/ErrorHandler";
 export const makeDiscount = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     console.log("req data", req.body);
-    const discountValue = req.body?.discount;
-    console.log("discount value", discountValue);
+    const data = req.body?.data;
+    console.log("discount value", data);
 
     try {
-      const discount = await DiscountModel.findOne({ code: discountValue });
+      const discount = await DiscountModel.findOne({
+        code: data.discountValue,
+        goodies: { $in: data.goodieId },
+      });
       console.log("discount data", discount);
 
       if (discount && discount.uses >= discount.limit) {
@@ -19,7 +22,7 @@ export const makeDiscount = CatchAsyncError(
         });
       } else {
         const updatedDiscount = await DiscountModel.findOneAndUpdate(
-          { code: discountValue },
+          { code: data.discountValue },
           { $inc: { uses: 1 } },
           { new: true }
         );
@@ -30,6 +33,42 @@ export const makeDiscount = CatchAsyncError(
         });
       }
     } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+// i want to fetch my discount and you populate the goodies
+
+export const fetchDiscountByGoodieId = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      console.log("res.para", req.params.id);
+      const goodieId = req.params.id;
+      console.log("goodieId of fetchDiscountByGoodieId ", goodieId);
+      const discounts = await DiscountModel.find({
+        goodies: { $in: [goodieId] },
+      })
+
+        // .populate("goodies")
+        .sort({ createdAt: -1 })
+
+        .lean();
+
+      console.log("fetchDiscountByGoodieId:", discounts);
+
+      if (!discounts || discounts.length === 0) {
+        console.log("No discount found");
+        res.status(200).json({
+          message: {},
+        });
+      }
+
+      res.status(200).json({
+        message: discounts,
+      });
+    } catch (err) {
+      console.error("Error fetching discount:", err);
       return next(new ErrorHandler(error.message, 500));
     }
   }
