@@ -18,7 +18,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 export const createOrder = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { goodies, name, email, number, city, district,paymentMethod, status, initDate } =
+      const { goodies, name, email, number, city, district,expeditionAdresse,paymentMethod, status, initDate } =
         req.body as IOrder;
 
       const data = {
@@ -27,6 +27,7 @@ export const createOrder = CatchAsyncError(
         email,
         city,
         district,
+        expeditionAdresse,
         paymentMethod,
         number,
         status,
