@@ -114,8 +114,10 @@ export interface ISocial extends mongoose.Document {
   name: string;
 }
 
+
+
 export interface IUser extends mongoose.Document {
-  name: string;
+  username: string;
   email: string;
   password: string;
   avatar: {
@@ -123,10 +125,9 @@ export interface IUser extends mongoose.Document {
     url: string;
   };
   role: string;
-  isVerified: boolean;
-  comparePassword: (password: string) => Promise<boolean>;
-  SignAccessToken: () => string;
-  SignRefreshToken: () => string;
+  isActive: boolean;
+  phone: number;
+  address: string;
 }
 
 export interface IAmbassador extends mongoose.Document {
