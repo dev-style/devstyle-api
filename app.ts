@@ -32,7 +32,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ["http://localhost:3000","http://localhost:3000", "https://dev-style.com","https://devstyle-client.vercel.app","https://devstyle-client.vercel.app/", "https://devstyle-next-git-main-angelo-diepes-projects.vercel.app/"],
+    origin: ["http://localhost:3000","http://localhost:3000", "https://dev-style.com","https://devstyle-client.vercel.app","https://devstyle-client.vercel.app/", "https://devstyle-next-git-main-angelo-diepes-projects.vercel.app"],
     credentials: true,
     exposedHeaders: ["set-cookie"], // Si vous utilisez des cookies, exposez-les pour le navigateur
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Ajoutez les méthodes nécessaires pour votre application
