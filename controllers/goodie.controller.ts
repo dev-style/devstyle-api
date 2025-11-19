@@ -68,13 +68,13 @@ const uploader = async (path: any) =>
         gravity: "north_west",
         x: 5,
         y: 5,
-        width: "0.5",
+        width: "0.4",
       },
       {
         overlay: "devstyle_watermark",
-        opacity: 6.5,
+        opacity: 4.5,
         gravity: "center",
-        width: "1.0",
+        width: "0.5",
         angle: 45,
       },
       {
@@ -83,7 +83,7 @@ const uploader = async (path: any) =>
         gravity: "south_east",
         x: 5,
         y: 5,
-        width: "0.5",
+        width: "0.4",
       },
     ],
   });
