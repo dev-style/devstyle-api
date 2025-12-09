@@ -5,7 +5,7 @@ import {
   deleteOneEmail,
   getAllEmails,
   getOneEmail,
-  saveEmail
+  saveEmail,
 } from "../controllers/newsletter.controller";
 const newsletterRoute = express.Router();
 
@@ -13,33 +13,36 @@ newsletterRoute.post(
   "/newletter/create-list",
   isAutheticated,
   authorizeRoles("admin"),
-  createAudience
+  createAudience,
 );
-newsletterRoute.get(
-  "/newletter/save",
-  isAutheticated,
-  authorizeRoles("admin"),
-  saveEmail
-);
+// newsletterRoute.get(
+//   "/newletter/save",
+//   isAutheticated,
+//   authorizeRoles("admin"),
+//   saveEmail,
+// );
+
+newsletterRoute.post("/newletter/save", saveEmail);
+
 newsletterRoute.get(
   "/newletter/all-email",
   isAutheticated,
   authorizeRoles("admin"),
-  getAllEmails
+  getAllEmails,
 );
 
 newsletterRoute.get(
   "/newsletter/:id",
   isAutheticated,
   authorizeRoles("admin"),
-  getOneEmail
+  getOneEmail,
 );
 
 newsletterRoute.get(
   "/newsletter/:id",
   isAutheticated,
   authorizeRoles("admin"),
-  deleteOneEmail
+  deleteOneEmail,
 );
 
 export default newsletterRoute;
