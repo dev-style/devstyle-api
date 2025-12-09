@@ -65,6 +65,7 @@ export const createAudience = CatchAsyncError(
 export const saveEmail = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     let { email } = req.body;
+    console.log("here is the email in the saveEmail function in my newleteer route",email)
 
     const NewNewsletter = new NewsletterModel({
       email,
