@@ -12,6 +12,7 @@ import {
   updateViews,
   uploadGoodie,
   getSearchAllGoodies,
+  resetGoodies,
 } from "../controllers/goodie.controller";
 
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
@@ -21,14 +22,14 @@ goodieRoute.post(
   "/goodie/create",
   isAutheticated,
   authorizeRoles("admin"),
-  uploadGoodie
+  uploadGoodie,
 );
 
 goodieRoute.put(
   "/goodie/update/:id",
   isAutheticated,
   authorizeRoles("admin"),
-  editGoodie
+  editGoodie,
 );
 
 goodieRoute.put("/goodie/update/views/:slug", updateViews);
@@ -44,21 +45,25 @@ goodieRoute.get("/goodies/new-goodies", getNewGoodies);
 goodieRoute.get("/goodies/hot-goodies", getHotGoodies);
 goodieRoute.get(
   "/goodies/hot-goodies/collection/:collectionID/:goodieID",
-  getHotGoodiesOfCollection
+  getHotGoodiesOfCollection,
 );
 
 goodieRoute.get(
   "/get-admin-goodie",
   isAutheticated,
   authorizeRoles("admin"),
-  getAdminAllGoodies
+  getAdminAllGoodies,
 );
 
 goodieRoute.delete(
   "/delete-goodie/:id",
   isAutheticated,
   authorizeRoles("admin"),
-  deleteGoodie
+  deleteGoodie,
+);
+goodieRoute.post(
+  "/reset-goodies",
+  resetGoodies,
 );
 
 export default goodieRoute;
