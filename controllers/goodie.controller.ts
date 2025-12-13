@@ -35,7 +35,7 @@ export const uploadGoodie = CatchAsyncError(
         const uploadedImages = [];
         for (const image of images) {
           const myCloud: ICloudinaryUploadResponse = (await uploader(
-            image
+            image,
           )) as ICloudinaryUploadResponse;
 
           uploadedImages.push({
@@ -56,7 +56,7 @@ export const uploadGoodie = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
-  }
+  },
 );
 
 const uploader = async (path: any) =>
@@ -93,9 +93,9 @@ export const editGoodie = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = req.body;
-      console.log("data",data)
+      console.log("data", data);
       const images = data.images;
-      console.log("images",images)
+      console.log("images", images);
       const goodieId = req.params.id;
 
       const goodieData = await GoodieModel.findById({ _id: goodieId });
@@ -116,13 +116,12 @@ export const editGoodie = CatchAsyncError(
       //   data.mainImage = uploadedImages[0];
       // }
 
-
       if (images) {
         console.log("les image existe :", images);
         const uploadedImages = [];
         for (const image of images) {
           const myCloud: ICloudinaryUploadResponse = (await uploader(
-            image
+            image,
           )) as ICloudinaryUploadResponse;
 
           uploadedImages.push({
@@ -137,7 +136,7 @@ export const editGoodie = CatchAsyncError(
       const goodie = await GoodieModel.findByIdAndUpdate(
         goodieId,
         { $set: data },
-        { new: true }
+        { new: true },
       );
 
       res.status(200).json({
@@ -146,7 +145,7 @@ export const editGoodie = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
-  }
+  },
 );
 
 // get single goodie --- without
@@ -163,7 +162,7 @@ export const getSingleGoodie = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
-  }
+  },
 );
 
 // get all goodies --- without
@@ -178,7 +177,7 @@ export const getAllGoodies = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
-  }
+  },
 );
 
 // get search all goodies
@@ -186,7 +185,9 @@ export const getAllGoodies = CatchAsyncError(
 export const getSearchAllGoodies = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const goodies = await GoodieModel.find({ show: true }).populate("fromCollection").populate("sizes");
+      const goodies = await GoodieModel.find({ show: true })
+        .populate("fromCollection")
+        .populate("sizes");
 
       res.status(200).json({
         message: goodies,
@@ -194,7 +195,7 @@ export const getSearchAllGoodies = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
-  }
+  },
 );
 
 // get all goodies --- only for admin
@@ -205,7 +206,7 @@ export const getAdminAllGoodies = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  }
+  },
 );
 
 // Delete goodie --- only for admin
@@ -230,7 +231,7 @@ export const deleteGoodie = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  }
+  },
 );
 
 // update Likes
@@ -241,7 +242,7 @@ export const updateLikes = CatchAsyncError(
       const goodie = await GoodieModel.findOneAndUpdate(
         { slug: req.params.slug },
         { $inc: { likes: 1 } },
-        { new: true }
+        { new: true },
       );
 
       res.status(200).json({
@@ -250,7 +251,7 @@ export const updateLikes = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  }
+  },
 );
 
 // update Views
@@ -261,7 +262,7 @@ export const updateViews = CatchAsyncError(
       const goodie = await GoodieModel.findOneAndUpdate(
         { slug: req.params.slug },
         { $inc: { views: 1 } },
-        { new: true }
+        { new: true },
       );
 
       res.status(200).json({
@@ -270,7 +271,7 @@ export const updateViews = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  }
+  },
 );
 
 // get new goodies
@@ -290,7 +291,7 @@ export const getNewGoodies = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  }
+  },
 );
 
 // get hot goodies
@@ -311,7 +312,7 @@ export const getHotGoodies = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  }
+  },
 );
 
 // get hot goodies of a collection
@@ -323,7 +324,7 @@ export const getHotGoodiesOfCollection = CatchAsyncError(
         {
           $match: {
             fromCollection: new mongoose.Types.ObjectId(
-              req.params.collectionID
+              req.params.collectionID,
             ),
             show: true,
             _id: { $ne: new mongoose.Types.ObjectId(req.params.goodieID) },
@@ -338,5 +339,19 @@ export const getHotGoodiesOfCollection = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  }
+  },
+);
+
+// controller that set the view and like to zero for all goodies to 0
+export const resetGoodies = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await GoodieModel.updateMany({}, { views: 0, likes: 0 });
+      res.status(200).json({
+        message: "Goodies views and likes reset to zero",
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  },
 );
