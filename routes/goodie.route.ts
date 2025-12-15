@@ -61,7 +61,7 @@ goodieRoute.delete(
   authorizeRoles("admin"),
   deleteGoodie,
 );
-goodieRoute.post(
+goodieRoute.get(
   "/reset-goodies",
   resetGoodies,
 );

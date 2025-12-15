@@ -170,7 +170,9 @@ export const getAllGoodies = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const goodies = await GoodieModel.find({ show: true });
-
+      // sort by alphabetical order
+      goodies.sort((a, b) => a.name.localeCompare(b.name));
+      
       res.status(200).json({
         message: goodies,
       });
