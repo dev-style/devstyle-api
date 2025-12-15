@@ -9,8 +9,38 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
       type: String,
       required: true,
     },
-    goodies: [{}],
-
+    goodies: [{
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Goodie",
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+      size: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Size",
+        required: false,
+      },
+      color: {
+        type: String,
+        required: false,
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+      total: {
+        type: Number,
+        required: true,
+      },
+      image: {
+        type: String,
+        required: true,
+      },
+    }],
     status: {
       type: String,
       default: "pending",

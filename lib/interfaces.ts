@@ -82,6 +82,10 @@ export interface IOrder extends mongoose.Document {
       price: number;
       quantity: number;
       total: number;
+      size?: mongoose.Schema.Types.ObjectId;
+      _id: mongoose.Schema.Types.ObjectId;
+      color?: string;
+      image: string;
     }
   ];
 
