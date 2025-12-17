@@ -47,7 +47,7 @@ export const createAudience = CatchAsyncError(
         });
 
         console.log(
-          `Successfully created an audience. The audience id is ${response.id}.`
+          `Successfully created an audience. The audience id is ${response.id}.`,
         );
         if (response.id) {
           return res.status(200).json({ message: response.id });
@@ -59,49 +59,84 @@ export const createAudience = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
-  }
+  },
 );
 
 export const saveEmail = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    let { email } = req.body;
-    console.log("here is the email in the saveEmail function in my newleteer route",email)
+    const { email } = req.body;
 
-    const NewNewsletter = new NewsletterModel({
+    console.log(
+      "here is the email in the saveEmail function in my newleteer route",
       email,
-    });
+    );
 
-    NewNewsletter.save()
-      .then((_) => {
-        async function run() {
-          const response = await mailchimp.lists.addListMember(
-            process.env.MAILCHIMP_AUDIENCE_ID,
-            {
-              email_address: email,
-              status: "subscribed",
-            }
-          );
+    if (!email || typeof email !== "string" || email.trim() === "") {
+      return res.status(400).json({
+        message:
+          "L'adresse email est requise et doit être une chaîne non vide.",
+      });
+    }
 
-          console.log(
-            `Successfully added contact as an audience member. The contact's id is ${response.id}.`
-          );
-          if (response.id) {
-            return res.status(200).json({ message: response.id });
-          } else {
-            console.log(response);
-            return res.status(500).json({ message: response });
-          }
+    try {
+
+      const NewNewsletter = new NewsletterModel({ email });
+      await NewNewsletter.save();
+
+      const listId = process.env.MAILCHIMP_AUDIENCE_ID;
+
+      const subscriberHash = email.toLowerCase(); 
+
+      let response;
+      try {
+        response = await mailchimp.lists.addListMember(listId, {
+          email_address: email,
+          status: "subscribed",
+        });
+      } catch (mailchimpError: any) {
+        const errorBody = JSON.parse(mailchimpError.response.text);
+
+        if (
+          mailchimpError.status === 400 &&
+          errorBody.title === "Member Exists"
+        ) {
+          console.log(`Email ${email} est déjà abonné. Poursuite du succès.`);
+          return res.status(200).json({
+            message: "Success (Email déjà abonné)",
+            mailchimpId: errorBody.id,
+          });
         }
 
-        run();
-      })
-      .catch((error) => {
-        console.log(error.message);
+        console.error("Erreur détaillée Mailchimp:", errorBody);
+
         return res.status(500).json({
-          message: "Newsletter not created",
+          message: "Échec de l'ajout à la newsletter Mailchimp.",
+          details: errorBody.detail || "Erreur de requête Mailchimp.",
         });
+      }
+
+      console.log(
+        `Successfully added contact as an audience member. The contact's id is ${response.id}.`,
+      );
+
+      return res.status(200).json({
+        message: "Email abonné avec succès.",
+        mailchimpId: response.id,
       });
-  }
+    } catch (error: any) {
+      console.error("Erreur Mongoose ou autre:", error.message);
+
+      if (error.code === 11000) {
+        return res.status(409).json({
+          message: "Cet email est déjà enregistré dans notre base de données.",
+        });
+      }
+
+      return res.status(500).json({
+        message: "Erreur interne lors de l'enregistrement de la newsletter.",
+      });
+    }
+  },
 );
 
 export const getAllEmails = CatchAsyncError(
@@ -114,7 +149,7 @@ export const getAllEmails = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  }
+  },
 );
 
 export const getOneEmail = CatchAsyncError(
@@ -127,7 +162,7 @@ export const getOneEmail = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  }
+  },
 );
 
 export const deleteOneEmail = CatchAsyncError(
@@ -140,5 +175,5 @@ export const deleteOneEmail = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  }
+  },
 );
