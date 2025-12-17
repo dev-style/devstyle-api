@@ -42,7 +42,8 @@ export const createOrder = CatchAsyncError(
           name: name,
           goodies: goodies,
           status: status,
-          email: email,
+          // email: email, 
+          email: process.env.SMTP_MAIL,  // send to devstyle
           initDate: new Date().toLocaleDateString("in-US", {
             year: "numeric",
             month: "long",
@@ -58,7 +59,7 @@ export const createOrder = CatchAsyncError(
 
       try {
         await sendMail({
-          email: email,
+          email: mailData.order.email ?? process.env.SMTP_MAIL ?? "",
           subject: "Order confirmation",
           template: "order-confirmation.ejs",
           data: mailData,
@@ -71,8 +72,8 @@ export const createOrder = CatchAsyncError(
 
       await NotificationModel.create({
         user: data.name,
-        title: "New Order",
-        message: `You have a new order from ${goodies[0].name}`,
+        title: `New Order of price ${data.goodies.reduce((acc, item) => acc + item.total, 0)} Fcfa`,
+        message: `You have a new order from ${data.name} of ${data.goodies.length} goodies.`,
       });
 
       res.status(200).json({

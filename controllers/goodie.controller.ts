@@ -344,13 +344,40 @@ export const getHotGoodiesOfCollection = CatchAsyncError(
   },
 );
 
-// controller that set the view and like to zero for all goodies to 0
+
 export const resetGoodies = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await GoodieModel.updateMany({}, { views: 0, likes: 0 });
       res.status(200).json({
         message: "Goodies views and likes reset to zero",
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  },
+);
+
+
+export const applyCollectionDiscount = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { collectionID, discountPercentage } = req.params;
+
+      await GoodieModel.updateMany(
+        { fromCollection: new mongoose.Types.ObjectId(collectionID) },
+        [
+          {
+            $set: {
+              inPromo: true,
+              promoPercentage: parseFloat(discountPercentage),
+            }
+          }
+        ]
+      );
+
+      res.status(200).json({
+        message: `Applied ${discountPercentage}% discount to all goodies in collection ${collectionID}`,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));

@@ -353,7 +353,7 @@
           <table style="border-bottom: 1px solid #0000002f;">
             <tr>
               <td>
-                Order #: <%= order._id %>
+                <!-- Order #: <%= order._id %> -->
               </td>
               <td>
                 Order Date: <%= order.initDate %>
@@ -382,7 +382,7 @@
                       <%= goodie.quantity %>
                     </td>
                     <td class="second-td">
-                      $<%= goodie.price %>
+                      <%= goodie.price %> Fcfa
                     </td>
                   </tr>
 
@@ -393,18 +393,18 @@
 
           </table>
 
-
+<!-- 
           <table class="table-row" style="border-top: 1px solid #00000029;">
             <tr>
               <td class="col-2">Subtotal:</td>
               <td class="col-2">$<%=totalPrice %>
               </td>
             </tr>
-          </table>
+          </table> -->
           <table class="table-row" style="margin-top: -20px;">
             <tr>
               <td class="col-2">Total:</td>
-              <td class="col-2">$<%= totalPrice %>
+              <td class="col-2"><%= totalPrice %> Fcfa
               </td>
             </tr>
           </table>
@@ -424,7 +424,7 @@
             If you have any questions, please contact our support team at
             <a href="mailto:support@becodemy.com">support@devstyle.com</a>
           </p>
-          <p>&copy; 2023 . All rights reserved.</p>
+          <p>&copy; <%= new Date().getFullYear() %> DevStyle. All rights reserved.</p>
         </div>
       </div>
     </body>
@@ -436,9 +436,9 @@
 
       <p>
         If you have any questions, please contact our support team at
-        <a href="mailto:support@becodemy.com">support@devstyle.com</a>
+        <a href="mailto:contact.devstyle@gmail.com">contact.devstyle@gmail.com</a>
       </p>
-      <p>&copy; 2023 . All rights reserved.</p>
+      <p>&copy;  . All rights reserved.</p>
     </div>
   </div>
 </body>

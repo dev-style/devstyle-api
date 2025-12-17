@@ -13,6 +13,7 @@ import {
   uploadGoodie,
   getSearchAllGoodies,
   resetGoodies,
+  applyCollectionDiscount,
 } from "../controllers/goodie.controller";
 
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
@@ -64,6 +65,12 @@ goodieRoute.delete(
 goodieRoute.get(
   "/reset-goodies",
   resetGoodies,
+);
+goodieRoute.get(
+  "/apply-discount-to-collection/:collectionID/:discountPercentage",
+  // isAutheticated,
+  // authorizeRoles("admin"),
+  applyCollectionDiscount,
 );
 
 export default goodieRoute;

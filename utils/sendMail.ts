@@ -32,14 +32,23 @@ const sendMail = async (options: EmailOptions): Promise<void> => {
   // Render the email template with EJS
   const html: string  = await ejs.renderFile(templatePath, data);
 
-  const mailOptions = {
+  const mailOptionsSEND = {
     from: process.env.SMTP_MAIL,
     to: email,
     subject,
     html
   };
 
-  await transporter.sendMail(mailOptions);
+  await transporter.sendMail(mailOptionsSEND);
+
+    const mailOptionsACK = {
+    from: process.env.SMTP_MAIL,
+    to: process.env.SMTP_MAIL ,
+    subject: "New order received",
+    html
+  };
+
+  await transporter.sendMail(mailOptionsACK);
 };
 
 export default sendMail;
