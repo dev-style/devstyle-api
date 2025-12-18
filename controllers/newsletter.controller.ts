@@ -79,13 +79,12 @@ export const saveEmail = CatchAsyncError(
     }
 
     try {
-
       const NewNewsletter = new NewsletterModel({ email });
       await NewNewsletter.save();
 
       const listId = process.env.MAILCHIMP_AUDIENCE_ID;
 
-      const subscriberHash = email.toLowerCase(); 
+      const subscriberHash = email.toLowerCase();
 
       let response;
       try {
@@ -124,17 +123,20 @@ export const saveEmail = CatchAsyncError(
         mailchimpId: response.id,
       });
     } catch (error: any) {
-      console.error("Erreur Mongoose ou autre:", error.message);
+      console.error("Erreur Mongoose:", error);
+
+   
 
       if (error.code === 11000) {
-        return res.status(409).json({
-          message: "Cet email est déjà enregistré dans notre base de données.",
-        });
+        return next(
+          new ErrorHandler(
+            "Cet email est déjà enregistré dans notre base de données.",
+            500,
+          ),
+        );
       }
 
-      return res.status(500).json({
-        message: "Erreur interne lors de l'enregistrement de la newsletter.",
-      });
+      return next(new ErrorHandler(error.message, 600));
     }
   },
 );
