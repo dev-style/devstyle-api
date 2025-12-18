@@ -42,8 +42,8 @@ export const createOrder = CatchAsyncError(
           name: name,
           goodies: goodies,
           status: status,
-          // email: email, 
-          email: process.env.SMTP_MAIL,  // send to devstyle
+          email: email, 
+          // email: process.env.SMTP_MAIL,  // send to devstyle
           initDate: new Date().toLocaleDateString("in-US", {
             year: "numeric",
             month: "long",
