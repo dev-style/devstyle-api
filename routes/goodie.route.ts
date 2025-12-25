@@ -14,6 +14,7 @@ import {
   getSearchAllGoodies,
   resetGoodies,
   applyCollectionDiscount,
+  disableCollectionDiscount,
 } from "../controllers/goodie.controller";
 
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
@@ -72,5 +73,10 @@ goodieRoute.get(
   // authorizeRoles("admin"),
   applyCollectionDiscount,
 );
-
+goodieRoute.get(
+  "/disable-discount-to-collection/:collectionID",
+  // isAutheticated,
+  // authorizeRoles("admin"),
+  disableCollectionDiscount,
+);
 export default goodieRoute;

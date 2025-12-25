@@ -384,3 +384,30 @@ export const applyCollectionDiscount = CatchAsyncError(
     }
   },
 );
+
+export const disableCollectionDiscount = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { collectionID } = req.params;
+
+      await GoodieModel.updateMany(
+        { fromCollection: new mongoose.Types.ObjectId(collectionID) },
+        [
+          {
+            $set: {
+              inPromo: false,
+              promoPercentage: 0,
+            }
+          }
+        ]
+      );
+
+      res.status(200).json({
+        message: `Disabled discount for all goodies in collection ${collectionID}`,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  },
+);
+
